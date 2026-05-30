@@ -572,12 +572,10 @@ function saveNickname() {
 }
 
 // ── SORT ────────────────────────────────────────────────
-function setSort(sort) {
-  if (currentSort === sort) return;
+async function setSort(sort) {
   currentSort = sort;
   document.querySelectorAll('.toggle-pill').forEach(b => b.classList.toggle('active', b.dataset.sort === sort));
-  feedQueue = buildFeedQueue();
-  renderFeedFromQueue();
+  await loadFeed();
 }
 
 // ── SEARCH ──────────────────────────────────────────────
@@ -597,7 +595,7 @@ function clearSearch() {
 function filterPosts(posts) {
   if (!searchQuery) return posts;
   return posts.filter(p => {
-    const nick = (p.profiles?.nickname || '').toLowerCase();
+    const nick = (p.nickname || '').toLowerCase();
     const title = (p.title || '').toLowerCase();
     const story = (p.story || '').toLowerCase();
     return title.includes(searchQuery) || story.includes(searchQuery) || nick.includes(searchQuery);
@@ -614,6 +612,12 @@ async function init() {
       document.getElementById('postCategory').value = p.dataset.cat;
     });
   });
+  // Auto-refresh feed every 30 seconds
+  setInterval(async () => {
+    if (!document.getElementById('detailScreen').classList.contains('active')) {
+      await loadFeed();
+    }
+  }, 30000);
 }
 
 // ── FEED ────────────────────────────────────────────────
