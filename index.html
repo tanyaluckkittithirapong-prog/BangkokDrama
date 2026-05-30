@@ -738,7 +738,8 @@ function renderCard(p) {
   const grade = getGrade(p);
   const { r, y, g, total } = getPcts(p);
   const pctsHtml = total === 0 ? '<div class="block-pcts" style="opacity:.7">ยังไม่มีโหวต — เป็นคนแรก</div>' : '<div class="block-pcts"><span class="vp"><span class="vp-dot r"></span>' + r + '%</span><span class="vp"><span class="vp-dot y"></span>' + y + '%</span><span class="vp"><span class="vp-dot g"></span>' + g + '%</span><span class="meta">' + (total >= 100 ? '100+' : total) + '</span></div>';
-  return '<article class="block ' + grade + '" onclick="openPost(\'' + p.id + '\')"><div class="block-head"><span class="block-cat">' + escHtml(p.category) + '</span><div class="block-icon"><svg><use href="#ic-' + p.category + '"/></svg></div></div><h2 class="block-title thai">' + escHtml(p.title) + '</h2><p class="block-story thai">' + escHtml(p.story) + '</p><div class="block-footer"><button class="block-cta" onclick="event.stopPropagation();openPost(\'' + p.id + '\')">อ่านเรื่อง<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></button>' + pctsHtml + '</div></article>';
+  const nick = p.profiles?.nickname || 'Anonymous';
+  return '<article class="block ' + grade + '" onclick="openPost(\'' + p.id + '\')"><div class="block-head"><span class="block-cat">' + escHtml(p.category) + '</span><div class="block-icon"><svg><use href="#ic-' + p.category + '"/></svg></div></div><h2 class="block-title thai">' + escHtml(p.title) + '</h2><p class="block-story thai">' + escHtml(p.story) + '</p><div class="block-footer"><button class="block-cta" onclick="event.stopPropagation();openPost(\'' + p.id + '\')">อ่านเรื่อง<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></button>' + pctsHtml + '</div><div style="margin-top:10px;font-size:11px;opacity:0.65;font-weight:500;letter-spacing:0.04em;text-transform:uppercase;">' + escHtml(nick) + ' · ' + timeAgo(p.created_at) + '</div></article>';
 }
 
 // ── POST DETAIL ─────────────────────────────────────────
@@ -762,7 +763,7 @@ function renderDetail(p, comments, myVote) {
   const verdictLabel = { red: 'คนส่วนใหญ่บอกว่า ผิด', yellow: 'แบ่งครึ่ง — พอได้', green: 'คนส่วนใหญ่บอกว่า ถูก', none: 'รอผลโหวต' }[grade];
   const rw = total === 0 ? 33.3 : r, yw = total === 0 ? 33.4 : y, gw = total === 0 ? 33.3 : g;
   const barStyle = total === 0 ? 'opacity:.25' : '';
-  const isMyPost = p.owner_id === browserId;
+  const isMyPost = p.owner_id === localStorage.getItem('bd_profile_id');
   const voted = myVote;
   const disabled = voted ? 'disabled' : '';
 
