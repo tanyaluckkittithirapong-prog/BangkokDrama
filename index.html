@@ -10,25 +10,20 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
 <style>
   :root {
-    /* Editorial paper palette */
     --paper:        #F2EDE1;
     --paper-2:      #FAF6EB;
     --ink:          #14110D;
     --ink-2:        #2A251E;
     --ink-soft:     #6E6557;
     --ink-line:     rgba(20,17,13,0.12);
-
-    /* Verdict blocks (the heart of the brand) */
-    --red:          #DD3B23;   /* Wrong */
+    --red:          #DD3B23;
     --red-ink:      #FFF5EE;
-    --yellow:       #F0BF2B;   /* Kinda */
+    --yellow:       #F0BF2B;
     --yellow-ink:   #14110D;
-    --green:        #B4CB5A;   /* Right */
+    --green:        #B4CB5A;
     --green-ink:    #14110D;
-    --neutral:      #E6DFCA;   /* Unvoted */
+    --neutral:      #E6DFCA;
     --neutral-ink:  #14110D;
-
-    /* Indicator dots (for percentages on tinted blocks) */
     --dot-red:      #DD3B23;
     --dot-yellow:   #F0BF2B;
     --dot-green:    #6F8F2C;
@@ -45,10 +40,9 @@
   :lang(th), .thai { font-family: 'IBM Plex Sans Thai', 'Bricolage Grotesque', sans-serif; }
   button { font-family: inherit; }
 
-  /* ── APP SHELL ─────────────────────────────────────── */
   .app { max-width: 720px; margin: 0 auto; min-height: 100vh; position: relative; background: var(--paper); }
 
-  /* ── TOP BAR ───────────────────────────────────────── */
+  /* TOP BAR */
   .topbar {
     display: flex; align-items: center; justify-content: space-between;
     padding: 18px 22px 14px;
@@ -58,21 +52,14 @@
   .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); }
   .brand-mark {
     display: inline-flex; align-items: center; gap: 5px;
-    flex: none;
-    background: var(--ink);
-    padding: 6px 9px;
-    border-radius: 999px;
+    flex: none; background: var(--ink);
+    padding: 6px 9px; border-radius: 999px;
   }
-  .brand-mark span {
-    width: 9px; height: 9px; border-radius: 50%;
-    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.25);
-  }
+  .brand-mark span { width: 9px; height: 9px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.25); }
   .brand-mark span.r { background: var(--red); }
   .brand-mark span.y { background: var(--yellow); }
   .brand-mark span.g { background: var(--green); }
-  .brand-name {
-    font-size: 19px; font-weight: 600; letter-spacing: -0.025em;
-  }
+  .brand-name { font-size: 19px; font-weight: 600; letter-spacing: -0.025em; }
   .brand-name em { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; letter-spacing: 0; padding-right: 1px; }
   .topbar-actions { display: flex; align-items: center; gap: 10px; }
   .btn-post {
@@ -87,20 +74,8 @@
   .btn-post:hover { background: var(--ink-2); }
   .btn-post:active { transform: scale(.97); }
   .btn-post .plus { font-size: 16px; line-height: 1; margin-top: -1px; }
-  .avatar-btn {
-    width: 36px; height: 36px; border-radius: 50%;
-    background: var(--neutral);
-    border: 1.5px solid var(--ink);
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px; font-weight: 600; color: var(--ink);
-    overflow: hidden;
-    transition: transform .15s;
-  }
-  .avatar-btn:hover { transform: scale(1.04); }
-  .avatar-btn img { width: 100%; height: 100%; object-fit: cover; }
 
-  /* ── FEED MASTHEAD ─────────────────────────────────── */
+  /* MASTHEAD */
   .masthead { padding: 14px 22px 28px; }
   .masthead-eyebrow {
     font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase;
@@ -111,211 +86,148 @@
   .masthead-title {
     font-size: clamp(34px, 9vw, 56px);
     font-weight: 600; letter-spacing: -0.035em;
-    line-height: 1.02;
-    text-wrap: balance;
+    line-height: 1.02; text-wrap: balance;
   }
-  .masthead-title em {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic; font-weight: 400;
-    letter-spacing: -0.01em;
-  }
-  .masthead-sub {
-    margin-top: 14px;
-    font-size: 14px; color: var(--ink-soft); line-height: 1.55;
-    max-width: 460px;
-  }
+  .masthead-title em { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; letter-spacing: -0.01em; }
+  .masthead-sub { margin-top: 14px; font-size: 14px; color: var(--ink-soft); line-height: 1.55; max-width: 460px; }
 
-  /* ── SORT TOGGLE ── */
-  .feed-toggle {
-    display: flex; align-items: center; gap: 8px;
-    padding: 0 22px 18px;
-    flex-wrap: wrap;
+  /* SEARCH BAR */
+  .search-wrap {
+    padding: 0 22px 16px;
+    position: relative;
   }
-  .toggle-label {
-    font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--ink-soft); margin-right: 4px;
-  }
-  .toggle-pill {
-    background: transparent;
+  .search-input {
+    width: 100%;
+    background: var(--paper-2);
     border: 1.5px solid var(--ink-line);
     border-radius: 999px;
-    padding: 8px 14px;
-    font-family: inherit; font-size: 13px; font-weight: 500;
-    color: var(--ink-soft);
-    cursor: pointer;
+    padding: 11px 18px 11px 42px;
+    font-family: inherit; font-size: 14px;
+    color: var(--ink); outline: none;
+    transition: border-color .15s;
+  }
+  .search-input:focus { border-color: var(--ink); }
+  .search-input::placeholder { color: var(--ink-soft); }
+  .search-icon {
+    position: absolute; left: 36px; top: 50%; transform: translateY(-50%);
+    color: var(--ink-soft); pointer-events: none;
+  }
+  .search-clear {
+    position: absolute; right: 36px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; cursor: pointer;
+    color: var(--ink-soft); display: none;
+    width: 24px; height: 24px;
+    align-items: center; justify-content: center;
+    border-radius: 50%;
+  }
+  .search-clear.visible { display: flex; }
+  .search-clear:hover { color: var(--ink); }
+
+  /* SORT TOGGLE */
+  .feed-toggle {
+    display: flex; align-items: center; gap: 8px;
+    padding: 0 22px 18px; flex-wrap: wrap;
+  }
+  .toggle-label { font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-soft); margin-right: 4px; }
+  .toggle-pill {
+    background: transparent; border: 1.5px solid var(--ink-line); border-radius: 999px;
+    padding: 8px 14px; font-family: inherit; font-size: 13px; font-weight: 500;
+    color: var(--ink-soft); cursor: pointer;
     display: inline-flex; align-items: center; gap: 6px;
-    transition: all .15s;
-    letter-spacing: -0.005em;
+    transition: all .15s; letter-spacing: -0.005em;
   }
   .toggle-pill:hover { color: var(--ink); border-color: var(--ink); }
-  .toggle-pill.active {
-    background: var(--ink);
-    color: var(--paper-2);
-    border-color: var(--ink);
-  }
+  .toggle-pill.active { background: var(--ink); color: var(--paper-2); border-color: var(--ink); }
   .toggle-pill .flame { font-size: 13px; line-height: 1; }
 
-  /* infinite scroll bits */
-  .feed-sentinel {
-    display: flex; align-items: center; justify-content: center;
-    padding: 28px 0 40px;
-  }
+  /* FEED */
+  .feed { padding: 0 0 120px; }
+  .feed-sentinel { display: flex; align-items: center; justify-content: center; padding: 28px 0 40px; }
   .feed-end {
     display: flex; align-items: center; justify-content: center; gap: 14px;
-    padding: 36px 22px 60px;
-    color: var(--ink-soft);
+    padding: 36px 22px 60px; color: var(--ink-soft);
     font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase;
   }
   .feed-end-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--ink-line); }
 
-  /* ── BLOCK CARD ─────────────────────────────────────
-     Each post is a full-bleed color block tinted by its verdict. */
-  .feed { padding: 0 0 120px; }
+  /* BLOCK CARD */
   .block {
-    position: relative;
-    padding: 26px 22px 22px;
-    border-top: 1.5px solid var(--ink);
-    cursor: pointer;
-    transition: filter .15s;
+    position: relative; padding: 26px 22px 22px;
+    border-top: 1.5px solid var(--ink); cursor: pointer; transition: filter .15s;
   }
   .block:last-of-type { border-bottom: 1.5px solid var(--ink); }
   .block:hover { filter: brightness(0.97); }
   .block:active { filter: brightness(0.93); }
-  .block.red     { background: var(--red);     color: var(--red-ink); }
-  .block.yellow  { background: var(--yellow);  color: var(--yellow-ink); }
-  .block.green   { background: var(--green);   color: var(--green-ink); }
-  .block.none    { background: var(--neutral); color: var(--neutral-ink); }
-
-  .block-head {
-    display: flex; align-items: flex-start; justify-content: space-between;
-    gap: 16px;
-    margin-bottom: 32px;
-  }
+  .block.red    { background: var(--red);     color: var(--red-ink); }
+  .block.yellow { background: var(--yellow);  color: var(--yellow-ink); }
+  .block.green  { background: var(--green);   color: var(--green-ink); }
+  .block.none   { background: var(--neutral); color: var(--neutral-ink); }
+  .block-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 32px; }
   .block-cat {
-    font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
-    text-transform: uppercase;
-    padding: 7px 12px 6px;
-    border: 1.4px solid currentColor;
-    border-radius: 999px;
-    background: transparent;
-    white-space: nowrap;
-    line-height: 1;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 7px 12px 6px; border: 1.4px solid currentColor; border-radius: 999px;
+    background: transparent; white-space: nowrap; line-height: 1;
   }
-  .block-icon {
-    width: 44px; height: 44px;
-    display: flex; align-items: center; justify-content: center;
-    flex: none;
-  }
+  .block-icon { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; flex: none; }
   .block-icon svg { width: 100%; height: 100%; display: block; }
-
   .block-title {
     font-family: 'Bricolage Grotesque', 'IBM Plex Sans Thai', sans-serif;
-    font-size: clamp(22px, 4.5vw, 26px);
-    font-weight: 600;
-    line-height: 1.15;
-    letter-spacing: -0.022em;
-    margin-bottom: 10px;
-    text-wrap: balance;
+    font-size: clamp(22px, 4.5vw, 26px); font-weight: 600;
+    line-height: 1.15; letter-spacing: -0.022em; margin-bottom: 10px; text-wrap: balance;
   }
   .block-title.thai { font-weight: 600; letter-spacing: 0; line-height: 1.25; }
   .block-story {
-    font-size: 14px;
-    line-height: 1.55;
-    opacity: 0.86;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    max-width: 92%;
-    margin-bottom: 24px;
+    font-size: 14px; line-height: 1.55; opacity: 0.86;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    overflow: hidden; max-width: 92%; margin-bottom: 24px;
   }
-  .block-footer {
-    display: flex; align-items: center; justify-content: space-between; gap: 16px;
-    flex-wrap: wrap;
-  }
+  .block-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
   .block-cta {
-    background: var(--ink); color: var(--paper-2);
-    border: none; border-radius: 999px;
-    padding: 9px 16px 10px;
-    font-size: 13px; font-weight: 500;
-    cursor: pointer;
-    display: inline-flex; align-items: center; gap: 8px;
-    letter-spacing: -0.005em;
+    background: var(--ink); color: var(--paper-2); border: none; border-radius: 999px;
+    padding: 9px 16px 10px; font-size: 13px; font-weight: 500; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 8px; letter-spacing: -0.005em;
   }
   .block-cta svg { width: 12px; height: 12px; }
   .block.red .block-cta { background: #14110D; }
-  .block-pcts {
-    display: flex; gap: 14px;
-    font-size: 12px; font-weight: 500;
-    font-variant-numeric: tabular-nums;
-    align-items: center;
-  }
+  .block-pcts { display: flex; gap: 14px; font-size: 12px; font-weight: 500; font-variant-numeric: tabular-nums; align-items: center; }
   .vp { display: inline-flex; align-items: center; gap: 6px; }
   .vp-dot { width: 9px; height: 9px; border-radius: 50%; box-shadow: 0 0 0 1px rgba(0,0,0,.18) inset; }
   .vp-dot.r { background: var(--dot-red); }
   .vp-dot.y { background: var(--dot-yellow); }
   .vp-dot.g { background: var(--dot-green); }
-  .block-pcts .meta {
-    font-size: 11px; opacity: 0.7;
-    padding-left: 4px;
-    border-left: 1px solid currentColor;
-    margin-left: 2px;
-  }
+  .block-pcts .meta { font-size: 11px; opacity: 0.7; padding-left: 4px; border-left: 1px solid currentColor; margin-left: 2px; }
 
-  /* ── LOADING / EMPTY ───────────────────────────────── */
-  .loading, .empty {
-    padding: 80px 22px; text-align: center; color: var(--ink-soft);
-  }
-  .spinner {
-    width: 28px; height: 28px; margin: 0 auto 14px;
-    border: 2.5px solid var(--ink-line); border-top-color: var(--ink);
-    border-radius: 50%; animation: spin .8s linear infinite;
-  }
+  /* LOADING / EMPTY */
+  .loading, .empty { padding: 80px 22px; text-align: center; color: var(--ink-soft); }
+  .spinner { width: 28px; height: 28px; margin: 0 auto 14px; border: 2.5px solid var(--ink-line); border-top-color: var(--ink); border-radius: 50%; animation: spin .8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .empty-mark {
-    display: inline-flex; align-items: center; justify-content: center; gap: 12px;
-    margin: 0 auto 18px;
-    width: fit-content;
-    background: var(--ink);
-    padding: 16px 22px;
-    border-radius: 999px;
-  }
-  .empty-mark span {
-    width: 20px; height: 20px; border-radius: 50%;
-    box-shadow: inset 0 0 0 1.5px rgba(0,0,0,0.25);
-  }
+  .empty-mark { display: inline-flex; align-items: center; justify-content: center; gap: 12px; margin: 0 auto 18px; width: fit-content; background: var(--ink); padding: 16px 22px; border-radius: 999px; }
+  .empty-mark span { width: 20px; height: 20px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px rgba(0,0,0,0.25); }
   .empty-mark span.r { background: var(--red); }
   .empty-mark span.y { background: var(--yellow); }
   .empty-mark span.g { background: var(--green); }
   .empty-text { font-size: 16px; color: var(--ink); font-weight: 500; }
   .empty-sub { font-size: 13px; color: var(--ink-soft); margin-top: 6px; }
 
-  /* ── DETAIL SCREEN ─────────────────────────────────── */
+  /* DETAIL SCREEN */
   .screen { display: none; position: fixed; inset: 0; background: var(--paper); z-index: 200; overflow-y: auto; }
   .screen.active { display: block; }
   .screen-inner { max-width: 720px; margin: 0 auto; min-height: 100vh; background: var(--paper); }
   .screen-bar {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 18px;
-    position: sticky; top: 0;
-    background: var(--paper); z-index: 5;
-    border-bottom: 1px solid var(--ink-line);
+    padding: 14px 18px; position: sticky; top: 0;
+    background: var(--paper); z-index: 5; border-bottom: 1px solid var(--ink-line);
   }
   .back-btn {
     background: none; border: none; cursor: pointer;
     width: 36px; height: 36px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    color: var(--ink);
-    transition: background .15s;
+    color: var(--ink); transition: background .15s;
   }
   .back-btn:hover { background: var(--ink-line); }
   .back-btn svg { width: 18px; height: 18px; }
   .screen-title { font-size: 13px; font-weight: 500; color: var(--ink-soft); }
-
-  /* Detail hero = the same block as feed, full-bleed */
-  .detail-hero {
-    padding: 28px 22px 30px;
-  }
+  .detail-hero { padding: 28px 22px 30px; }
   .detail-hero.red    { background: var(--red);     color: var(--red-ink); }
   .detail-hero.yellow { background: var(--yellow);  color: var(--yellow-ink); }
   .detail-hero.green  { background: var(--green);   color: var(--green-ink); }
@@ -323,100 +235,109 @@
   .detail-hero-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 28px; }
   .detail-title {
     font-family: 'Bricolage Grotesque', 'IBM Plex Sans Thai', sans-serif;
-    font-size: clamp(28px, 6.5vw, 38px);
-    font-weight: 600; letter-spacing: -0.028em;
-    line-height: 1.08;
-    text-wrap: balance;
-    margin-bottom: 14px;
+    font-size: clamp(28px, 6.5vw, 38px); font-weight: 600; letter-spacing: -0.028em;
+    line-height: 1.08; text-wrap: balance; margin-bottom: 14px;
   }
   .detail-title.thai { line-height: 1.2; letter-spacing: -0.005em; }
-  .detail-meta {
-    font-size: 12px; opacity: 0.75;
-    letter-spacing: 0.04em; text-transform: uppercase;
-    font-weight: 500;
-  }
-
-  /* Story body */
+  .detail-meta { font-size: 12px; opacity: 0.75; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 500; }
   .detail-section { padding: 26px 22px; }
   .detail-section + .detail-section { border-top: 1px solid var(--ink-line); }
-  .section-eyebrow {
-    font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--ink-soft); margin-bottom: 14px;
-  }
-  .detail-story {
-    font-size: 16px; line-height: 1.7; color: var(--ink-2);
-    white-space: pre-wrap;
-  }
-
-  /* Verdict bar (block style) */
+  .section-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 14px; }
+  .detail-story { font-size: 16px; line-height: 1.7; color: var(--ink-2); white-space: pre-wrap; }
   .verdict { display: flex; height: 14px; margin-bottom: 16px; border: 1.5px solid var(--ink); border-radius: 0; overflow: hidden; }
   .verdict > div { transition: width .4s cubic-bezier(.4,0,.2,1); }
   .verdict .v-r { background: var(--red); }
   .verdict .v-y { background: var(--yellow); }
   .verdict .v-g { background: var(--green); }
   .verdict-legend { display: flex; justify-content: space-between; gap: 12px; }
-  .vl {
-    display: flex; flex-direction: column; gap: 2px;
-    font-size: 12px;
-  }
+  .vl { display: flex; flex-direction: column; gap: 2px; font-size: 12px; }
   .vl-pct { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; line-height: 1; }
   .vl-label { font-size: 11px; color: var(--ink-soft); letter-spacing: 0.04em; text-transform: uppercase; font-weight: 500; }
   .vl.r .vl-pct { color: var(--red); }
   .vl.y .vl-pct { color: #B58A14; }
   .vl.g .vl-pct { color: #6F8F2C; }
   .verdict-total { margin-top: 14px; font-size: 12px; color: var(--ink-soft); }
-
-  /* Vote buttons */
   .vote-buttons { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 20px; }
   .vote-btn {
-    background: transparent;
-    border: 1.5px solid var(--ink);
-    border-radius: 12px;
-    padding: 14px 8px;
-    font-family: inherit;
-    font-size: 13px; font-weight: 600;
-    cursor: pointer;
-    display: flex; flex-direction: column; align-items: center; gap: 8px;
-    transition: all .15s;
-    color: var(--ink);
+    background: transparent; border: 1.5px solid var(--ink); border-radius: 12px;
+    padding: 14px 8px; font-family: inherit; font-size: 13px; font-weight: 600;
+    cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px;
+    transition: all .15s; color: var(--ink);
   }
   .vote-btn:hover:not(:disabled) { transform: translateY(-2px); }
   .vote-btn:active { transform: scale(.97); }
   .vote-btn:disabled { cursor: default; }
-  .vote-btn-swatch {
-    width: 100%; height: 28px; border-radius: 8px;
-    border: 1.5px solid var(--ink);
-  }
+  .vote-btn-swatch { width: 100%; height: 28px; border-radius: 8px; border: 1.5px solid var(--ink); }
   .vote-btn.r .vote-btn-swatch { background: var(--red); }
   .vote-btn.y .vote-btn-swatch { background: var(--yellow); }
   .vote-btn.g .vote-btn-swatch { background: var(--green); }
   .vote-btn.voted { background: var(--ink); color: var(--paper-2); }
   .vote-btn.voted .vote-btn-swatch { border-color: var(--paper-2); }
-  .vote-btn.r.voted .vote-btn-swatch { box-shadow: inset 0 0 0 3px var(--ink); }
-  .vote-done {
-    text-align: center; font-size: 12px; color: var(--ink-soft);
-    margin-top: 12px; letter-spacing: 0.04em; text-transform: uppercase;
-  }
+  .vote-done { text-align: center; font-size: 12px; color: var(--ink-soft); margin-top: 12px; letter-spacing: 0.04em; text-transform: uppercase; }
 
-  /* Owner stats */
-  .owner-box {
-    background: var(--paper-2);
-    border: 1.5px solid var(--ink);
-    border-radius: 14px;
-    padding: 18px;
-    margin-top: 14px;
+  /* COMMENTS */
+  .comment-item { padding: 16px 0; border-bottom: 1px solid var(--ink-line); }
+  .comment-item:last-child { border-bottom: none; }
+  .comment-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .comment-avatar { width: 26px; height: 26px; border-radius: 50%; background: var(--ink); color: var(--paper-2); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; flex: none; }
+  .comment-nick { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .comment-time { font-size: 11px; color: var(--ink-soft); margin-left: auto; letter-spacing: 0.04em; text-transform: uppercase; }
+  .comment-text { font-size: 14px; line-height: 1.55; color: var(--ink-2); padding-left: 36px; }
+  .comments-empty { padding: 18px 0; color: var(--ink-soft); font-size: 14px; }
+  .comment-form { display: flex; gap: 8px; margin-top: 16px; background: var(--paper-2); border: 1.5px solid var(--ink); border-radius: 999px; padding: 5px 6px 5px 18px; align-items: center; }
+  .comment-input { flex: 1; border: none; background: transparent; font-family: inherit; font-size: 14px; color: var(--ink); padding: 8px 0; outline: none; min-width: 0; }
+  .comment-input::placeholder { color: var(--ink-soft); }
+  .comment-submit { background: var(--ink); color: var(--paper-2); border: none; border-radius: 999px; padding: 8px 16px; font-size: 13px; font-weight: 500; cursor: pointer; }
+
+  /* MODALS */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(20,17,13,0.55); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 300; align-items: flex-end; justify-content: center; animation: fadein .2s ease; }
+  @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+  .modal-overlay.active { display: flex; }
+  .modal { background: var(--paper); border-radius: 24px 24px 0 0; border-top: 1.5px solid var(--ink); padding: 22px 22px 36px; width: 100%; max-width: 720px; position: relative; max-height: 92vh; overflow-y: auto; animation: slideUp .28s cubic-bezier(.4,0,.2,1); }
+  @media (min-width: 600px) { .modal-overlay { align-items: center; padding: 22px; } .modal { border-radius: 20px; border: 1.5px solid var(--ink); max-width: 480px; } }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .modal-handle { width: 44px; height: 4px; background: var(--ink-line); border-radius: 2px; margin: 0 auto 18px; }
+  @media (min-width: 600px) { .modal-handle { display: none; } }
+  .modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; cursor: pointer; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--ink-soft); transition: background .15s; }
+  .modal-close:hover { background: var(--ink-line); color: var(--ink); }
+  .modal-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 12px; }
+  .modal-title { font-size: 30px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.05; margin-bottom: 10px; text-wrap: balance; }
+  .modal-title em { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; letter-spacing: -0.005em; }
+  .modal-sub { font-size: 14px; color: var(--ink-soft); line-height: 1.55; margin-bottom: 22px; }
+  .modal-sub.thai { color: var(--ink-2); }
+
+  /* FORM */
+  .form-group { margin-bottom: 16px; }
+  .form-label { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 8px; display: block; }
+  .form-input, .form-textarea {
+    width: 100%; background: var(--paper-2); border: 1.5px solid var(--ink-line); border-radius: 12px;
+    padding: 13px 14px; font-family: inherit; font-size: 15px; color: var(--ink); outline: none; transition: border-color .15s;
   }
-  .owner-eyebrow {
-    font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--ink-soft); margin-bottom: 12px;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .owner-eyebrow::before {
-    content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--ink);
-  }
-  .owner-stats {
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;
-  }
+  .form-input:focus, .form-textarea:focus { border-color: var(--ink); }
+  .form-textarea { resize: vertical; min-height: 280px; font-size: 15px; line-height: 1.6; }
+  .form-char-count { font-size: 11px; color: var(--ink-soft); text-align: right; margin-top: 6px; font-variant-numeric: tabular-nums; }
+  .form-hint { margin-top: 10px; padding: 11px 14px; background: var(--paper-2); border: 1px dashed var(--ink-line); border-radius: 10px; font-size: 12px; color: var(--ink-soft); line-height: 1.55; display: flex; gap: 10px; align-items: flex-start; }
+  .form-hint::before { content: '⚠'; flex: none; color: #B58A14; font-size: 13px; line-height: 1.4; }
+  .form-hint strong { color: var(--ink); font-weight: 600; }
+  .cat-picker { display: flex; flex-wrap: wrap; gap: 6px; }
+  .cat-pill { background: var(--paper-2); border: 1.5px solid var(--ink-line); border-radius: 999px; padding: 9px 14px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all .15s; color: var(--ink-2); font-family: inherit; }
+  .cat-pill:hover { border-color: var(--ink); }
+  .cat-pill.active { background: var(--ink); border-color: var(--ink); color: var(--paper-2); }
+  .btn-submit { width: 100%; background: var(--ink); color: var(--paper-2); border: none; border-radius: 14px; padding: 15px; font-size: 15px; font-weight: 500; cursor: pointer; transition: background .15s; }
+  .btn-submit:hover { background: var(--ink-2); }
+  .btn-submit:disabled { opacity: .5; cursor: not-allowed; }
+  .btn-ghost { width: 100%; background: none; border: none; padding: 12px; margin-top: 8px; font-family: inherit; font-size: 14px; color: var(--ink-soft); cursor: pointer; }
+  .btn-ghost:hover { color: var(--ink); }
+  .btn-flat { flex: 1; background: transparent; color: var(--ink); border: 1.5px solid var(--ink); border-radius: 10px; padding: 10px; font-size: 13px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: background .15s; }
+  .btn-flat:hover { background: var(--ink); color: var(--paper-2); }
+  .btn-flat.danger { color: var(--red); border-color: var(--red); }
+  .btn-flat.danger:hover { background: var(--red); color: var(--paper-2); }
+
+  /* OWNER BOX */
+  .owner-box { background: var(--paper-2); border: 1.5px solid var(--ink); border-radius: 14px; padding: 18px; margin-top: 14px; }
+  .owner-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .owner-eyebrow::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--ink); }
+  .owner-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
   .owner-stat { text-align: center; padding: 8px 4px; }
   .owner-stat-num { font-size: 26px; font-weight: 600; letter-spacing: -0.02em; line-height: 1; font-variant-numeric: tabular-nums; }
   .owner-stat-label { font-size: 11px; color: var(--ink-soft); margin-top: 4px; letter-spacing: 0.04em; text-transform: uppercase; }
@@ -424,346 +345,30 @@
   .owner-stat.y .owner-stat-num { color: #B58A14; }
   .owner-stat.g .owner-stat-num { color: #6F8F2C; }
   .owner-actions { display: flex; gap: 8px; margin-top: 14px; }
-  .btn-flat {
-    flex: 1;
-    background: transparent; color: var(--ink);
-    border: 1.5px solid var(--ink); border-radius: 10px;
-    padding: 10px;
-    font-size: 13px; font-weight: 500;
-    cursor: pointer;
-    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-    transition: background .15s;
-  }
-  .btn-flat:hover { background: var(--ink); color: var(--paper-2); }
-  .btn-flat.danger { color: var(--red); border-color: var(--red); }
-  .btn-flat.danger:hover { background: var(--red); color: var(--paper-2); }
 
-  /* Comments */
-  .comment-item {
-    padding: 16px 0;
-    border-bottom: 1px solid var(--ink-line);
-  }
-  .comment-item:last-child { border-bottom: none; }
-  .comment-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
-  .comment-avatar {
-    width: 26px; height: 26px; border-radius: 50%;
-    background: var(--ink); color: var(--paper-2);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; font-weight: 600;
-    flex: none;
-  }
-  .comment-nick { font-size: 13px; font-weight: 600; color: var(--ink); }
-  .comment-time { font-size: 11px; color: var(--ink-soft); margin-left: auto; letter-spacing: 0.04em; text-transform: uppercase; }
-  .comment-text { font-size: 14px; line-height: 1.55; color: var(--ink-2); padding-left: 36px; }
-  .comments-empty { padding: 18px 0; color: var(--ink-soft); font-size: 14px; }
-
-  .comment-form {
-    display: flex; gap: 8px; margin-top: 16px;
-    background: var(--paper-2);
-    border: 1.5px solid var(--ink);
-    border-radius: 999px;
-    padding: 5px 6px 5px 18px;
-    align-items: center;
-  }
-  .comment-input {
-    flex: 1; border: none; background: transparent;
-    font-family: inherit; font-size: 14px;
-    color: var(--ink);
-    padding: 8px 0;
-    outline: none;
-    min-width: 0;
-  }
-  .comment-input::placeholder { color: var(--ink-soft); }
-  .comment-submit {
-    background: var(--ink); color: var(--paper-2);
-    border: none; border-radius: 999px;
-    padding: 8px 16px;
-    font-size: 13px; font-weight: 500; cursor: pointer;
-  }
-
-  /* ── MODALS ────────────────────────────────────────── */
-  .modal-overlay {
-    display: none; position: fixed; inset: 0;
-    background: rgba(20,17,13,0.55);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    z-index: 300;
-    align-items: flex-end; justify-content: center;
-    animation: fadein .2s ease;
-  }
-  @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
-  .modal-overlay.active { display: flex; }
-  .modal {
-    background: var(--paper);
-    border-radius: 24px 24px 0 0;
-    border-top: 1.5px solid var(--ink);
-    padding: 22px 22px 36px;
-    width: 100%; max-width: 720px;
-    position: relative;
-    max-height: 92vh;
-    overflow-y: auto;
-    animation: slideUp .28s cubic-bezier(.4,0,.2,1);
-  }
-  @media (min-width: 600px) {
-    .modal-overlay { align-items: center; padding: 22px; }
-    .modal { border-radius: 20px; border: 1.5px solid var(--ink); max-width: 480px; }
-  }
-  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-  .modal-handle {
-    width: 44px; height: 4px; background: var(--ink-line); border-radius: 2px;
-    margin: 0 auto 18px;
-  }
-  @media (min-width: 600px) { .modal-handle { display: none; } }
-  .modal-close {
-    position: absolute; top: 16px; right: 16px;
-    background: none; border: none; cursor: pointer;
-    width: 32px; height: 32px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    color: var(--ink-soft);
-    transition: background .15s;
-  }
-  .modal-close:hover { background: var(--ink-line); color: var(--ink); }
-  .modal-eyebrow {
-    font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--ink-soft); margin-bottom: 12px;
-  }
-  .modal-title {
-    font-size: 30px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.05;
-    margin-bottom: 10px;
-    text-wrap: balance;
-  }
-  .modal-title em { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; letter-spacing: -0.005em; }
-  .modal-sub {
-    font-size: 14px; color: var(--ink-soft); line-height: 1.55;
-    margin-bottom: 22px;
-  }
-  .modal-sub.thai { color: var(--ink-2); }
-  .modal-callout {
-    background: var(--paper-2);
-    border: 1.5px solid var(--ink-line);
-    border-radius: 14px;
-    padding: 14px 16px;
-    font-size: 13px; color: var(--ink-2); line-height: 1.65;
-    margin-bottom: 22px;
-  }
-  .btn-google {
-    width: 100%;
-    background: var(--ink); color: var(--paper-2);
-    border: 1.5px solid var(--ink);
-    border-radius: 14px;
-    padding: 15px;
-    font-size: 15px; font-weight: 500;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center; gap: 12px;
-    transition: background .15s;
-  }
-  .btn-google:hover { background: var(--ink-2); }
-  .google-icon-wrap {
-    width: 22px; height: 22px; background: #fff; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    flex: none;
-  }
-  .google-icon { width: 14px; height: 14px; }
-
-  /* Form */
-  .form-group { margin-bottom: 16px; }
-  .form-label {
-    font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--ink-soft); margin-bottom: 8px; display: block;
-  }
-  .form-input, .form-textarea, .form-select {
-    width: 100%;
-    background: var(--paper-2);
-    border: 1.5px solid var(--ink-line);
-    border-radius: 12px;
-    padding: 13px 14px;
-    font-family: inherit;
-    font-size: 15px;
-    color: var(--ink);
-    outline: none;
-    transition: border-color .15s;
-  }
-  .form-input:focus, .form-textarea:focus, .form-select:focus {
-    border-color: var(--ink);
-  }
-  .form-textarea { resize: vertical; min-height: 280px; font-size: 15px; line-height: 1.6; }
-  .form-char-count { font-size: 11px; color: var(--ink-soft); text-align: right; margin-top: 6px; font-variant-numeric: tabular-nums; }
-  .form-hint {
-    margin-top: 10px;
-    padding: 11px 14px;
-    background: var(--paper-2);
-    border: 1px dashed var(--ink-line);
-    border-radius: 10px;
-    font-size: 12px;
-    color: var(--ink-soft);
-    line-height: 1.55;
-    display: flex; gap: 10px; align-items: flex-start;
-  }
-  .form-hint::before {
-    content: '⚠';
-    flex: none;
-    color: #B58A14;
-    font-size: 13px;
-    line-height: 1.4;
-  }
-  .form-hint strong { color: var(--ink); font-weight: 600; }
-
-  /* Category pill picker */
-  .cat-picker { display: flex; flex-wrap: wrap; gap: 6px; }
-  .cat-pill {
-    background: var(--paper-2);
-    border: 1.5px solid var(--ink-line);
-    border-radius: 999px;
-    padding: 9px 14px;
-    font-size: 13px; font-weight: 500;
-    cursor: pointer;
-    transition: all .15s;
-    color: var(--ink-2);
-    font-family: inherit;
-  }
-  .cat-pill:hover { border-color: var(--ink); }
-  .cat-pill.active {
-    background: var(--ink);
-    border-color: var(--ink);
-    color: var(--paper-2);
-  }
-
-  .btn-submit {
-    width: 100%;
-    background: var(--ink); color: var(--paper-2);
-    border: none; border-radius: 14px;
-    padding: 15px;
-    font-size: 15px; font-weight: 500;
-    cursor: pointer;
-    transition: background .15s;
-  }
-  .btn-submit:hover { background: var(--ink-2); }
-  .btn-submit:disabled { opacity: .5; cursor: not-allowed; }
-  .btn-ghost {
-    width: 100%; background: none; border: none;
-    padding: 12px; margin-top: 8px;
-    font-family: inherit; font-size: 14px;
-    color: var(--ink-soft); cursor: pointer;
-  }
-  .btn-ghost:hover { color: var(--ink); }
-
-  /* ── PROFILE ───────────────────────────────────────── */
-  .profile-hero {
-    padding: 30px 22px 28px;
-    background: var(--neutral);
-    border-bottom: 1.5px solid var(--ink);
-    position: relative;
-  }
-  .profile-avatar-big {
-    width: 80px; height: 80px; border-radius: 50%;
-    background: var(--ink); color: var(--paper-2);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 32px; font-weight: 600;
-    margin-bottom: 18px;
-    border: 1.5px solid var(--ink);
-    overflow: hidden;
-  }
-  .profile-avatar-big img { width: 100%; height: 100%; object-fit: cover; }
-  .profile-hero-edit {
-    position: absolute; top: 18px; right: 18px;
-    background: var(--ink); color: var(--paper-2);
-    border: 1.5px solid var(--ink); border-radius: 999px;
-    padding: 8px 14px 8px 12px;
-    font-family: inherit; font-size: 12px; font-weight: 500;
-    cursor: pointer;
-    display: inline-flex; align-items: center; gap: 6px;
-    letter-spacing: -0.005em;
-    transition: background .15s;
-  }
-  .profile-hero-edit:hover { background: var(--ink-2); }
-  .profile-hero-edit svg { width: 12px; height: 12px; }
-
-  /* Edit-profile avatar uploader */
-  .edit-avatar-row { display: flex; align-items: center; gap: 18px; margin-bottom: 22px; }
-  .edit-avatar {
-    width: 76px; height: 76px; border-radius: 50%;
-    background: var(--ink); color: var(--paper-2);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 30px; font-weight: 600;
-    border: 1.5px solid var(--ink);
-    overflow: hidden; flex: none;
-    position: relative;
-  }
-  .edit-avatar img { width: 100%; height: 100%; object-fit: cover; }
-  .edit-avatar-actions { display: flex; flex-direction: column; gap: 6px; }
-  .btn-mini {
-    background: transparent;
-    border: 1.5px solid var(--ink); color: var(--ink);
-    border-radius: 999px;
-    padding: 7px 14px;
-    font-family: inherit; font-size: 12px; font-weight: 500;
-    cursor: pointer;
-    align-self: flex-start;
-    transition: background .15s;
-  }
-  .btn-mini:hover { background: var(--ink); color: var(--paper-2); }
-  .btn-mini.subtle { border-color: transparent; color: var(--ink-soft); }
-  .btn-mini.subtle:hover { background: transparent; color: var(--ink); border-color: var(--ink-line); }
-  .profile-name {
-    font-size: 32px; font-weight: 600; letter-spacing: -0.028em; line-height: 1;
-    margin-bottom: 8px;
-  }
-  .profile-email { font-size: 13px; color: var(--ink-soft); }
-  .profile-section { padding: 26px 22px; }
-  .profile-post {
-    padding: 14px 0;
-    border-bottom: 1px solid var(--ink-line);
-    cursor: pointer;
-    display: flex; align-items: center; gap: 14px;
-  }
-  .profile-post:hover .pp-title { text-decoration: underline; text-underline-offset: 3px; }
-  .pp-dot { width: 12px; height: 12px; border-radius: 50%; flex: none; border: 1.5px solid var(--ink); }
-  .pp-dot.red { background: var(--red); }
-  .pp-dot.yellow { background: var(--yellow); }
-  .pp-dot.green { background: var(--green); }
-  .pp-dot.none { background: var(--neutral); }
-  .pp-main { flex: 1; min-width: 0; }
-  .pp-title { font-size: 15px; font-weight: 500; color: var(--ink); margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .pp-meta { font-size: 11px; color: var(--ink-soft); letter-spacing: 0.04em; text-transform: uppercase; }
-  .pp-arrow { color: var(--ink-soft); }
-
-  /* ── TOAST ─────────────────────────────────────────── */
-  .toast {
-    position: fixed;
-    bottom: 28px; left: 50%;
-    transform: translateX(-50%) translateY(120px);
-    background: var(--ink); color: var(--paper-2);
-    padding: 12px 22px; border-radius: 999px;
-    font-size: 14px; font-weight: 500;
-    z-index: 999;
-    transition: transform .3s cubic-bezier(.4,0,.2,1);
-    white-space: nowrap;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-  }
+  /* TOAST */
+  .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(120px); background: var(--ink); color: var(--paper-2); padding: 12px 22px; border-radius: 999px; font-size: 14px; font-weight: 500; z-index: 999; transition: transform .3s cubic-bezier(.4,0,.2,1); white-space: nowrap; box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
   .toast.show { transform: translateX(-50%) translateY(0); }
 
-  /* ── small adjustments ─────────────────────────────── */
+  /* RESPONSIVE */
   @media (max-width: 480px) {
     .topbar { padding: 14px 16px 12px; }
     .masthead { padding: 10px 16px 20px; }
+    .search-wrap { padding: 0 16px 14px; }
+    .search-icon { left: 30px; }
+    .search-clear { right: 30px; }
     .feed-toggle { padding: 0 16px 16px; gap: 6px; }
     .toggle-pill { padding: 7px 12px; font-size: 12.5px; }
     .toggle-label { display: none; }
     .block { padding: 22px 16px 20px; }
     .block-head { margin-bottom: 24px; }
     .block-story { max-width: 100%; margin-bottom: 18px; }
-    .block-footer { gap: 12px; }
-    .block-pcts { gap: 10px; font-size: 11.5px; }
     .detail-section { padding: 22px 16px; }
     .detail-hero { padding: 24px 16px; }
     .verdict-legend { gap: 6px; }
     .vl-pct { font-size: 19px; }
     .vl-label { font-size: 10px; letter-spacing: 0.02em; }
     .vote-btn { padding: 12px 4px; font-size: 12.5px; }
-    .comment-text { padding-left: 0; }
-    .profile-hero { padding: 26px 18px 24px; }
-    .profile-name { font-size: 26px; }
-    .profile-section { padding: 22px 16px; }
     .modal { padding: 20px 18px 32px; }
     .modal-title { font-size: 24px; }
     .owner-stats { gap: 2px; }
@@ -775,50 +380,13 @@
   @media (max-width: 360px) {
     .masthead-title { font-size: 30px; }
     .vl-pct { font-size: 17px; }
-    .vl-label { font-size: 9.5px; }
   }
-  /* ── MAGIC-LINK LANDING ─────────────────────────────── */
-  .auth-landing-wrap {
-    min-height: 100vh;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    text-align: center;
-    padding: 40px 24px;
-    gap: 4px;
-  }
-  .auth-landing-wrap .empty-mark { margin-bottom: 28px; }
-  .auth-landing-spinner { margin-bottom: 22px; }
-  .auth-landing-spinner .spinner { margin: 0 auto; }
-  .auth-landing-title {
-    font-size: clamp(26px, 6vw, 34px);
-    font-weight: 600; letter-spacing: -0.03em; line-height: 1.1;
-    margin-bottom: 12px; text-wrap: balance;
-  }
-  .auth-landing-title em { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; }
-  .auth-landing-sub {
-    font-size: 15px; color: var(--ink-soft); line-height: 1.6;
-    max-width: 360px; margin: 0 auto 8px;
-  }
-  .auth-landing-card {
-    background: var(--paper-2);
-    border: 1.5px solid var(--ink);
-    border-radius: 16px;
-    padding: 20px 22px;
-    margin: 22px auto 0;
-    max-width: 380px;
-    font-size: 14px; color: var(--ink-2); line-height: 1.65;
-  }
-  .auth-landing-card strong { font-weight: 600; color: var(--ink); }
-  .auth-landing-actions { margin-top: 26px; width: 100%; max-width: 360px; }
-  .auth-landing-actions .btn-submit { margin-bottom: 10px; }
-
 </style>
 </head>
 <body>
-
 <div class="app">
 
-  <!-- ── TOP BAR ── -->
+  <!-- TOP BAR -->
   <div class="topbar">
     <a class="brand" href="#" onclick="event.preventDefault();window.scrollTo({top:0,behavior:'smooth'});">
       <div class="brand-mark" aria-hidden="true"><span class="r"></span><span class="y"></span><span class="g"></span></div>
@@ -828,18 +396,26 @@
       <button class="btn-post" onclick="handlePostClick()">
         <span class="plus">+</span><span>โพสต์</span>
       </button>
-      <button class="avatar-btn" id="avatarBtn" onclick="handleProfileClick()" aria-label="Profile">?</button>
     </div>
   </div>
 
-  <!-- ── MASTHEAD ── -->
+  <!-- MASTHEAD -->
   <div class="masthead" style="max-width: 550px">
     <div class="masthead-eyebrow">บันทึกดราม่า เก็บไปคิดซะ ความเห็นส่วนรวมล้วนๆ</div>
     <h1 class="masthead-title">ผิด <em>หรือ</em> ถูก?<br><span style="opacity:.4">ให้คนแปลกหน้าตัดสิน</span></h1>
     <p class="masthead-sub thai">เล่าเรื่องของคุณแบบนิรนาม แล้วให้คนทั้งกรุงโหวต — แดง&nbsp;ผิด, เหลือง&nbsp;พอได้, เขียว&nbsp;ถูก. ไม่มีใครรู้ว่าคุณคือใคร.</p>
   </div>
 
-  <!-- ── SORT TOGGLE ── -->
+  <!-- SEARCH -->
+  <div class="search-wrap">
+    <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" class="search-input" id="searchInput" placeholder="ค้นหาเรื่อง หรือชื่อผู้โพสต์ · Search posts or nicknames" oninput="handleSearch(this.value)">
+    <button class="search-clear" id="searchClear" onclick="clearSearch()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+
+  <!-- SORT TOGGLE -->
   <div class="feed-toggle">
     <span class="toggle-label">เรียงโดย</span>
     <button class="toggle-pill active" data-sort="latest" onclick="setSort('latest')">ใหม่ล่าสุด · Latest</button>
@@ -847,13 +423,13 @@
     <button class="toggle-pill" data-sort="random" onclick="setSort('random')"><span class="flame">🎲</span>สุ่ม · Random</button>
   </div>
 
-  <!-- ── FEED ── -->
+  <!-- FEED -->
   <div class="feed" id="feed">
     <div class="loading"><div class="spinner"></div>กำลังโหลด...</div>
   </div>
 </div>
 
-<!-- ── DETAIL SCREEN ── -->
+<!-- DETAIL SCREEN -->
 <div class="screen" id="detailScreen">
   <div class="screen-inner">
     <div class="screen-bar">
@@ -867,80 +443,25 @@
   </div>
 </div>
 
-<!-- ── PROFILE SCREEN ── -->
-<div class="screen" id="profileScreen">
-  <div class="screen-inner">
-    <div class="screen-bar">
-      <button class="back-btn" onclick="closeProfile()" aria-label="Back">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-      </button>
-      <div class="screen-title">โปรไฟล์ · Profile</div>
-      <div style="width:36px"></div>
-    </div>
-    <div id="profileBody"></div>
-  </div>
-</div>
-
-<!-- ── AUTH MODAL ── -->
-<div class="modal-overlay" id="authModal">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <button class="modal-close" onclick="closeAuthModal()" aria-label="Close">
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
-    </button>
-    <div id="authSignInView">
-      <div class="modal-eyebrow">เข้าสู่ระบบ · Sign in</div>
-      <h2 class="modal-title">ก่อนจะ <em>โหวต</em><br>หรือเล่าเรื่อง</h2>
-      <p class="modal-sub thai">ทุกอย่างในแอพนี้เป็นความลับ ไม่มีใครรู้ว่าคุณเป็นใคร อิอิ</p>
-      <div class="modal-callout">เห็นแค่ชื่อเล่นที่คุณตั้งเอง — ไม่มีใครเห็นอีเมลหรือบัญชี Google ของคุณ</div>
-      <button class="btn-google" onclick="signInWithGoogle()">
-        <span class="google-icon-wrap">
-          <svg class="google-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
-            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-          </svg>
-        </span>
-        เข้าสู่ระบบด้วย Google · Sign in with Google
-      </button>
-    </div>
-    <div id="signedOutView" style="display:none;text-align:center;padding:20px 0">
-      <div style="font-size:36px;margin-bottom:12px">👋</div>
-      <div style="font-size:18px;font-weight:600;margin-bottom:8px">ออกจากระบบแล้ว</div>
-      <div style="font-size:14px;color:var(--ink-soft);line-height:1.6;margin-bottom:24px">You've been signed out.<br>See you next time!</div>
-      <button class="btn-google" onclick="signInWithGoogle()">
-        <span class="google-icon-wrap">
-          <svg class="google-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
-            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-          </svg>
-        </span>
-        เข้าสู่ระบบอีกครั้ง · Sign in again
-      </button>
-      <button class="btn-flat" style="margin-top:12px;width:100%" onclick="closeAuthModal()">ปิด · Close</button>
-    </div>
-  </div>
-</div>
-
-<!-- ── NICKNAME MODAL ── -->
+<!-- NICKNAME MODAL -->
 <div class="modal-overlay" id="nicknameModal">
   <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-eyebrow">ตั้งชื่อเล่น · One last thing</div>
+    <button class="modal-close" onclick="closeNicknameModal()" aria-label="Close">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <div class="modal-eyebrow">ก่อนเริ่ม · One thing first</div>
     <h2 class="modal-title">เลือกชื่อ<br>ที่ใช้ใน <em>เกม</em></h2>
-    <p class="modal-sub thai">ชื่อเล่นนี้คือสิ่งเดียวที่คนอื่นเห็น ตั้งให้สนุก เลือกให้ปัง.</p>
+    <p class="modal-sub thai">ทุกอย่างนิรนาม — ไม่มีใครรู้ว่าคุณเป็นใคร นอกจากชื่อเล่นที่คุณตั้งเอง</p>
     <div class="form-group">
-      <label class="form-label">Nickname</label>
+      <label class="form-label">ชื่อเล่น · Nickname</label>
       <input type="text" class="form-input" id="nicknameInput" placeholder="DramaQueen99" maxlength="20">
     </div>
-    <button class="btn-submit" onclick="saveNickname()">เข้าเลย · Enter</button>
+    <button class="btn-submit" onclick="saveNickname()">เข้าเลย · Let's go</button>
   </div>
 </div>
 
-<!-- ── POST MODAL ── -->
+<!-- POST MODAL -->
 <div class="modal-overlay" id="postModal">
   <div class="modal">
     <div class="modal-handle"></div>
@@ -950,13 +471,11 @@
     <div class="modal-eyebrow">โพสต์ใหม่ · New entry</div>
     <h2 class="modal-title">เล่ามา <em>ทั้งหมด</em></h2>
     <p class="modal-sub thai">ไม่มีใครรู้ว่าเป็นคุณ — ระบายให้สุด.</p>
-
     <div class="form-group">
       <label class="form-label">หัวข้อ · Title</label>
-      <input type="text" class="form-input" id="postTitle" placeholder="ทิ้งมหา'ลัยเพื่อแฟน" maxlength="50" oninput="updateCharCount('postTitle','titleCount',50)">
+      <input type="text" class="form-input" id="postTitle" placeholder="ทิ้งมหา'ลัยเพื่อแฟน" maxlength="50" oninput="updateCharCount('postTitle','titleCount')">
       <div class="form-char-count"><span id="titleCount">0</span> / 50</div>
     </div>
-
     <div class="form-group">
       <label class="form-label">หมวดหมู่ · Category</label>
       <div class="cat-picker" id="catPicker">
@@ -966,73 +485,31 @@
         <button type="button" class="cat-pill" data-cat="เงิน">เงิน</button>
         <button type="button" class="cat-pill" data-cat="อื่นๆ">อื่นๆ</button>
       </div>
-      <select id="postCategory" style="display:none"><option value="ความรัก">ความรัก</option><option value="การงาน">การงาน</option><option value="ครอบครัว">ครอบครัว</option><option value="เงิน">เงิน</option><option value="อื่นๆ">อื่นๆ</option></select>
+      <select id="postCategory" style="display:none">
+        <option value="ความรัก">ความรัก</option>
+        <option value="การงาน">การงาน</option>
+        <option value="ครอบครัว">ครอบครัว</option>
+        <option value="เงิน">เงิน</option>
+        <option value="อื่นๆ">อื่นๆ</option>
+      </select>
     </div>
-
     <div class="form-group">
       <label class="form-label">เรื่องราว · Story</label>
-      <textarea class="form-textarea" id="postStory" placeholder="เล่าเรื่องของคุณ&hellip; ไม่มีใครรู้ว่าเป็นคุณ" maxlength="3000" oninput="updateCharCount('postStory','storyCount',3000)"></textarea>
+      <textarea class="form-textarea" id="postStory" placeholder="เล่าเรื่องของคุณ… ไม่มีใครรู้ว่าเป็นคุณ" maxlength="3000" oninput="updateCharCount('postStory','storyCount')"></textarea>
       <div class="form-char-count"><span id="storyCount">0</span> / 3000</div>
       <div class="form-hint">
         <span><strong>ไม่มีระบบบันทึกอัตโนมัติ</strong> · No autosave — ถ้าเรื่องยาว แนะนำให้พิมพ์ในแอพอื่นก่อน แล้วคัดลอกมาวางที่นี่</span>
       </div>
     </div>
-
     <button class="btn-submit" id="submitPostBtn" onclick="submitPost()">โพสต์แบบนิรนาม · Post anonymously</button>
     <button class="btn-ghost" onclick="closePostModal()">ยกเลิก · Cancel</button>
-  </div>
-</div>
-
-<!-- ── EDIT PROFILE MODAL ── -->
-<div class="modal-overlay" id="editProfileModal">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <button class="modal-close" onclick="closeEditProfile()" aria-label="Close">
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
-    </button>
-    <div class="modal-eyebrow">แก้ไขโปรไฟล์ · Edit profile</div>
-    <h2 class="modal-title">ตั้งชื่อ <em>ใหม่</em></h2>
-    <p class="modal-sub thai">เปลี่ยนชื่อเล่นและรูปโปรไฟล์ — อีเมลของคุณยังไม่มีใครเห็น.</p>
-
-    <div class="edit-avatar-row">
-      <div class="edit-avatar" id="editAvatarPreview">?</div>
-      <div class="edit-avatar-actions">
-        <input type="file" id="editAvatarFile" accept="image/*" style="display:none" onchange="handleAvatarFile(event)">
-        <button class="btn-mini" onclick="document.getElementById('editAvatarFile').click()">เปลี่ยนรูป · Change photo</button>
-        <button class="btn-mini subtle" id="editAvatarRemove" onclick="removeAvatar()" style="display:none">ลบรูป · Remove</button>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label class="form-label">ชื่อเล่น · Nickname</label>
-      <input type="text" class="form-input" id="editNicknameInput" maxlength="20" placeholder="DramaQueen99">
-    </div>
-
-    <button class="btn-submit" id="saveEditProfileBtn" onclick="saveEditProfile()">บันทึก · Save changes</button>
-    <button class="btn-ghost" onclick="closeEditProfile()">ยกเลิก · Cancel</button>
-  </div>
-</div>
-
-<!-- ── MAGIC-LINK LANDING SCREEN ──
-     Shown ONLY when the page is opened from a magic-link email. It replaces the
-     feed entirely so the user never sees two landing pages. -->
-<div class="screen" id="authLanding">
-  <div class="screen-inner">
-    <div class="auth-landing-wrap">
-      <div class="empty-mark"><span class="r"></span><span class="y"></span><span class="g"></span></div>
-      <div id="authLandingState">
-        <div class="auth-landing-spinner"><div class="spinner"></div></div>
-        <div class="auth-landing-title">กำลังเข้าสู่ระบบ…</div>
-        <div class="auth-landing-sub">Signing you in…</div>
-      </div>
-    </div>
   </div>
 </div>
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<!-- Category icons (referenced by JS) -->
+<!-- Category icons -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
     <symbol id="ic-ความรัก" viewBox="0 0 48 48"><path d="M24 41s-13.5-8.6-13.5-19A8 8 0 0 1 24 17a8 8 0 0 1 13.5 5c0 10.4-13.5 19-13.5 19z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></symbol>
@@ -1046,70 +523,90 @@
 <script>
 const SUPABASE_URL = 'https://wwndjnvghhdxicmvswns.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_0DlrWun8c0Q8MUUc6b6RFw_Z6RprXrQ';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
-  auth: {
-    flowType: 'pkce',
-    detectSessionInUrl: true,
-    persistSession: true,
-    autoRefreshToken: true
-  }
-});
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-let currentUser = null;
-let currentProfile = null;
+// ── ANONYMOUS IDENTITY ──────────────────────────────────
+// Browser ID: random ID stored in localStorage, persists across visits
+// Nickname: chosen by user, stored in localStorage
+function getBrowserId() {
+  let id = localStorage.getItem('bd_browser_id');
+  if (!id) { id = 'anon_' + Math.random().toString(36).slice(2) + Date.now().toString(36); localStorage.setItem('bd_browser_id', id); }
+  return id;
+}
+function getNickname() { return localStorage.getItem('bd_nickname') || null; }
+function setNickname(n) { localStorage.setItem('bd_nickname', n); }
+function getMyVotes() { try { return JSON.parse(localStorage.getItem('bd_votes') || '{}'); } catch(e) { return {}; } }
+function setMyVote(postId, color) { const v = getMyVotes(); v[postId] = color; localStorage.setItem('bd_votes', JSON.stringify(v)); }
+
+const browserId = getBrowserId();
 let currentPost = null;
-let currentVote = null;
-let posts = [];
+let allPosts = [];
+let feedQueue = [];
+let renderedCount = 0;
+let feedObserver = null;
+let isLoadingMore = false;
 let currentSort = 'latest';
+let searchQuery = '';
+let pendingAction = null; // what to do after nickname is set
 
-/* ─────────────────────────────────────────────────────────
-   SORT
-   ───────────────────────────────────────────────────────── */
+// ── NICKNAME MODAL ──────────────────────────────────────
+function requireNickname(action) {
+  if (getNickname()) { action(); return; }
+  pendingAction = action;
+  document.getElementById('nicknameModal').classList.add('active');
+  setTimeout(() => document.getElementById('nicknameInput').focus(), 100);
+}
+
+function closeNicknameModal() {
+  document.getElementById('nicknameModal').classList.remove('active');
+  pendingAction = null;
+}
+
+function saveNickname() {
+  const nick = document.getElementById('nicknameInput').value.trim();
+  if (!nick || nick.length < 2) { showToast('กรุณากรอกชื่อ 2 ตัวขึ้นไป'); return; }
+  setNickname(nick);
+  document.getElementById('nicknameModal').classList.remove('active');
+  showToast('ยินดีต้อนรับ ' + nick + ' 🎉');
+  if (pendingAction) { const a = pendingAction; pendingAction = null; a(); }
+}
+
+// ── SORT ────────────────────────────────────────────────
 function setSort(sort) {
   if (currentSort === sort) return;
   currentSort = sort;
-  document.querySelectorAll('.toggle-pill').forEach(b => {
-    b.classList.toggle('active', b.dataset.sort === sort);
-  });
+  document.querySelectorAll('.toggle-pill').forEach(b => b.classList.toggle('active', b.dataset.sort === sort));
   feedQueue = buildFeedQueue();
   renderFeedFromQueue();
 }
 
-/* ─────────────────────────────────────────────────────────
-   INIT + AUTH
-   Listener is registered BEFORE getSession so the SIGNED_IN
-   event from the magic-link token exchange is never missed.
-   ───────────────────────────────────────────────────────── */
-async function init() {
-  sb.auth.onAuthStateChange(async (event, session) => {
-    if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session?.user) {
-      const isNewSignIn = !currentUser || currentUser.id !== session.user.id;
-      currentUser = session.user;
-      await loadProfile();
-      cleanUrl();
-      updateAvatar();
-      if (isNewSignIn) {
-        closeAuthModal();
-        if (needsNickname()) showNicknameModal();
-      }
-    } else if (event === 'SIGNED_OUT') {
-      currentUser = null;
-      currentProfile = null;
-      updateAvatar();
-    }
+// ── SEARCH ──────────────────────────────────────────────
+function handleSearch(val) {
+  searchQuery = val.trim().toLowerCase();
+  document.getElementById('searchClear').classList.toggle('visible', searchQuery.length > 0);
+  renderFeedFromQueue();
+}
+
+function clearSearch() {
+  document.getElementById('searchInput').value = '';
+  searchQuery = '';
+  document.getElementById('searchClear').classList.remove('visible');
+  renderFeedFromQueue();
+}
+
+function filterPosts(posts) {
+  if (!searchQuery) return posts;
+  return posts.filter(p => {
+    const nick = (p.profiles?.nickname || '').toLowerCase();
+    const title = (p.title || '').toLowerCase();
+    const story = (p.story || '').toLowerCase();
+    return title.includes(searchQuery) || story.includes(searchQuery) || nick.includes(searchQuery);
   });
+}
 
-  const { data: { session } } = await sb.auth.getSession();
-  if (session?.user) {
-    currentUser = session.user;
-    await loadProfile();
-    cleanUrl();
-  }
-
-  updateAvatar();
+// ── INIT ────────────────────────────────────────────────
+async function init() {
   await loadFeed();
-
-  // Post-modal category pill picker
   document.querySelectorAll('.cat-pill').forEach(p => {
     p.addEventListener('click', () => {
       document.querySelectorAll('.cat-pill').forEach(x => x.classList.remove('active'));
@@ -1119,120 +616,20 @@ async function init() {
   });
 }
 
-function cleanUrl() {
-  if (window.location.search || window.location.hash) {
-    window.history.replaceState(null, '', window.location.pathname);
-  }
-}
-
-function needsNickname() {
-  return !currentProfile?.nickname ||
-         (currentUser && currentProfile.nickname === currentUser.email.split('@')[0]);
-}
-
-async function loadProfile() {
-  if (!currentUser) return;
-  const { data } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
-  currentProfile = data;
-}
-
-function updateAvatar() {
-  const btn = document.getElementById('avatarBtn');
-  btn.style.padding = '0';
-  if (currentProfile?.avatar_url) {
-    btn.innerHTML = `<img src="${currentProfile.avatar_url}" alt="">`;
-    btn.style.background = 'transparent';
-  } else if (currentProfile?.nickname) {
-    btn.textContent = currentProfile.nickname.charAt(0).toUpperCase();
-    btn.style.background = '#14110D';
-    btn.style.color = '#FAF6EB';
-  } else if (currentUser) {
-    btn.textContent = '?';
-  } else {
-    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
-  }
-}
-
-/* ─────────────────────────────────────────────────────────
-   MAGIC-LINK LANDING SCREEN
-   The dedicated "you're logged in" page. Replaces the feed
-   entirely when arriving from an email link.
-   ───────────────────────────────────────────────────────── */
-function showAuthLanding(state) {
-  const screen = document.getElementById('authLanding');
-  const box = document.getElementById('authLandingState');
-  screen.classList.add('active');
-  screen.scrollTop = 0;
-
-  if (state === 'loading') {
-    box.innerHTML = `
-      <div class="auth-landing-spinner"><div class="spinner"></div></div>
-      <div class="auth-landing-title">กำลังเข้าสู่ระบบ…</div>
-      <div class="auth-landing-sub">Signing you in…</div>`;
-  } else if (state === 'success') {
-    const nick = currentProfile?.nickname && !needsNickname() ? currentProfile.nickname : null;
-    box.innerHTML = `
-      <div class="auth-landing-title">เข้าสู่ระบบแล้ว <em>เรียบร้อย</em> ✓</div>
-      <div class="auth-landing-sub">${nick ? 'ยินดีต้อนรับกลับมา ' + escHtml(nick) : 'You are now logged in.'}</div>
-      <div class="auth-landing-card">
-        <strong>กลับไปที่หน้าเดิมได้เลย</strong><br>
-        คุณล็อกอินสำเร็จแล้ว — กลับไปที่แท็บหรือหน้าต่างเดิมที่คุณเปิดไว้ แล้วใช้งานต่อได้เลย<br><br>
-        <strong>You're logged in. Please go back to the page you came from</strong> and continue — it's now signed in too.
-      </div>
-      <div class="auth-landing-actions">
-        <button class="btn-submit" onclick="enterAppFromLanding()">เข้าใช้งานที่นี่ · Continue here</button>
-      </div>`;
-    if (needsNickname()) {
-      // First-time user still needs a nickname — prompt after they continue.
-    }
-  } else {
-    box.innerHTML = `
-      <div class="auth-landing-title">ลิงก์หมดอายุ</div>
-      <div class="auth-landing-sub">ลิงก์นี้อาจถูกใช้ไปแล้วหรือหมดอายุ — ขอ Magic Link ใหม่อีกครั้ง<br><br>This link may have expired or already been used. Please request a new one.</div>
-      <div class="auth-landing-actions">
-        <button class="btn-submit" onclick="retryFromLanding()">ขอลิงก์ใหม่ · Request new link</button>
-      </div>`;
-  }
-}
-
-// User chooses to use the app in THIS tab instead of going back.
-function enterAppFromLanding() {
-  document.getElementById('authLanding').classList.remove('active');
-  updateAvatar();
-  if (needsNickname()) showNicknameModal();
-}
-
-function retryFromLanding() {
-  document.getElementById('authLanding').classList.remove('active');
-  showAuthModal();
-}
-
-/* ─────────────────────────────────────────────────────────
-   FEED  (infinite scroll, no demo fallback)
-   ───────────────────────────────────────────────────────── */
+// ── FEED ────────────────────────────────────────────────
 const PAGE_SIZE = 10;
-let allPosts = [];
-let feedQueue = [];
-let renderedCount = 0;
-let feedObserver = null;
-let isLoadingMore = false;
 
 function buildFeedQueue() {
-  let base = allPosts.slice();
+  let base = filterPosts(allPosts.slice());
   if (currentSort === 'trending') {
     base.sort((a, b) => {
-      const ca = a.comments?.[0]?.count || 0;
-      const cb = b.comments?.[0]?.count || 0;
+      const ca = a.comments?.[0]?.count || 0, cb = b.comments?.[0]?.count || 0;
       const sA = (a.votes_red + a.votes_yellow + a.votes_green) + ca;
       const sB = (b.votes_red + b.votes_yellow + b.votes_green) + cb;
-      if (sB !== sA) return sB - sA;
-      return new Date(b.created_at) - new Date(a.created_at);
+      return sB !== sA ? sB - sA : new Date(b.created_at) - new Date(a.created_at);
     });
   } else if (currentSort === 'random') {
-    for (let i = base.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [base[i], base[j]] = [base[j], base[i]];
-    }
+    for (let i = base.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [base[i], base[j]] = [base[j], base[i]]; }
   } else {
     base.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
   }
@@ -1243,17 +640,8 @@ async function loadFeed() {
   const feed = document.getElementById('feed');
   feed.innerHTML = '<div class="loading"><div class="spinner"></div>กำลังโหลด...</div>';
   removeFeedTail();
-
-  const { data, error } = await sb
-    .from('posts')
-    .select(`*, profiles(nickname), comments(count)`)
-    .order('created_at', { ascending: false });
-
-  if (error) {
-    feed.innerHTML = '<div class="empty"><div class="empty-mark"><span class="r"></span><span class="y"></span><span class="g"></span></div><div class="empty-text">โหลดไม่ได้</div><div class="empty-sub">' + escHtml(error.message) + '</div></div>';
-    return;
-  }
-
+  const { data, error } = await sb.from('posts').select('*, profiles(nickname), comments(count)').order('created_at', { ascending: false });
+  if (error) { feed.innerHTML = '<div class="empty"><div class="empty-mark"><span class="r"></span><span class="y"></span><span class="g"></span></div><div class="empty-text">โหลดไม่ได้</div><div class="empty-sub">' + escHtml(error.message) + '</div></div>'; return; }
   allPosts = data || [];
   feedQueue = buildFeedQueue();
   renderFeedFromQueue();
@@ -1263,10 +651,11 @@ function renderFeedFromQueue() {
   const feed = document.getElementById('feed');
   removeFeedTail();
   renderedCount = 0;
-  posts = feedQueue.slice();
-
+  feedQueue = buildFeedQueue();
   if (feedQueue.length === 0) {
-    feed.innerHTML = '<div class="empty"><div class="empty-mark"><span class="r"></span><span class="y"></span><span class="g"></span></div><div class="empty-text">ยังไม่มีดราม่า</div><div class="empty-sub">เป็นคนแรกที่โพสต์</div></div>';
+    const msg = searchQuery ? 'ไม่พบผลลัพธ์ · No results found' : 'ยังไม่มีดราม่า';
+    const sub = searchQuery ? 'ลองค้นหาด้วยคำอื่น' : 'เป็นคนแรกที่โพสต์';
+    feed.innerHTML = '<div class="empty"><div class="empty-mark"><span class="r"></span><span class="y"></span><span class="g"></span></div><div class="empty-text">' + msg + '</div><div class="empty-sub">' + sub + '</div></div>';
     return;
   }
   feed.innerHTML = '';
@@ -1298,9 +687,8 @@ function showEndOfFeed() {
   if (document.getElementById('feedEnd')) return;
   const feed = document.getElementById('feed');
   const end = document.createElement('div');
-  end.id = 'feedEnd';
-  end.className = 'feed-end';
-  end.innerHTML = '<span class="feed-end-dot"></span><span>หมดแล้ว · You’re all caught up</span><span class="feed-end-dot"></span>';
+  end.id = 'feedEnd'; end.className = 'feed-end';
+  end.innerHTML = '<span class="feed-end-dot"></span><span>หมดแล้ว · You\'re all caught up</span><span class="feed-end-dot"></span>';
   feed.parentNode.insertBefore(end, feed.nextSibling);
 }
 
@@ -1310,21 +698,16 @@ function setupInfiniteScroll() {
   let sentinel = document.getElementById('feedSentinel');
   if (!sentinel) {
     sentinel = document.createElement('div');
-    sentinel.id = 'feedSentinel';
-    sentinel.className = 'feed-sentinel';
+    sentinel.id = 'feedSentinel'; sentinel.className = 'feed-sentinel';
     sentinel.innerHTML = '<div class="spinner" style="width:22px;height:22px;border-width:2px"></div>';
     const feed = document.getElementById('feed');
     feed.parentNode.insertBefore(sentinel, feed.nextSibling);
   }
-  feedObserver = new IntersectionObserver(entries => {
-    if (entries[0].isIntersecting) renderNextPage();
-  }, { rootMargin: '600px 0px' });
+  feedObserver = new IntersectionObserver(entries => { if (entries[0].isIntersecting) renderNextPage(); }, { rootMargin: '600px 0px' });
   feedObserver.observe(sentinel);
 }
 
-/* ─────────────────────────────────────────────────────────
-   GRADE / PERCENT / TIME HELPERS
-   ───────────────────────────────────────────────────────── */
+// ── GRADE / PERCENT / TIME ──────────────────────────────
 function getGrade(p) {
   const total = p.votes_red + p.votes_yellow + p.votes_green;
   if (total === 0) return 'none';
@@ -1338,272 +721,133 @@ function getPcts(p) {
   if (total === 0) return { r: 0, y: 0, g: 0, total: 0 };
   const r = Math.round(p.votes_red / total * 100);
   const y = Math.round(p.votes_yellow / total * 100);
-  const g = 100 - r - y;
-  return { r, y, g, total };
+  return { r, y, g: 100 - r - y, total };
 }
 
 function timeAgo(ts) {
   const diff = Date.now() - new Date(ts).getTime();
   const m = Math.floor(diff / 60000);
   if (m < 1) return 'เพิ่งโพสต์';
-  if (m < 60) return `${m} นาทีที่แล้ว`;
+  if (m < 60) return m + ' นาทีที่แล้ว';
   const h = Math.floor(m / 60);
-  if (h < 24) return `${h} ชั่วโมงที่แล้ว`;
-  return `${Math.floor(h / 24)} วันที่แล้ว`;
+  if (h < 24) return h + ' ชั่วโมงที่แล้ว';
+  return Math.floor(h / 24) + ' วันที่แล้ว';
 }
 
 function renderCard(p) {
   const grade = getGrade(p);
   const { r, y, g, total } = getPcts(p);
-  const voteLabel = total === 0
-    ? 'ยังไม่มีโหวต — เป็นคนแรก'
-    : (total >= 100 ? '100+ โหวต' : `${total} โหวต`);
-  const pctsHtml = total === 0 ? '' : `
-    <div class="block-pcts">
-      <span class="vp"><span class="vp-dot r"></span>${r}%</span>
-      <span class="vp"><span class="vp-dot y"></span>${y}%</span>
-      <span class="vp"><span class="vp-dot g"></span>${g}%</span>
-      <span class="meta">${total >= 100 ? '100+' : total}</span>
-    </div>`;
-  const noVoteHtml = total === 0 ? `<div class="block-pcts" style="opacity:.7">${voteLabel}</div>` : '';
-
-  return `
-    <article class="block ${grade}" onclick="openPost('${p.id}')">
-      <div class="block-head">
-        <span class="block-cat">${escHtml(p.category)}</span>
-        <div class="block-icon"><svg><use href="#ic-${p.category}"/></svg></div>
-      </div>
-      <h2 class="block-title thai">${escHtml(p.title)}</h2>
-      <p class="block-story thai">${escHtml(p.story)}</p>
-      <div class="block-footer">
-        <button class="block-cta" onclick="event.stopPropagation();openPost('${p.id}')">
-          อ่านเรื่อง
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-        </button>
-        ${total === 0 ? noVoteHtml : pctsHtml}
-      </div>
-    </article>`;
+  const pctsHtml = total === 0 ? '<div class="block-pcts" style="opacity:.7">ยังไม่มีโหวต — เป็นคนแรก</div>' : '<div class="block-pcts"><span class="vp"><span class="vp-dot r"></span>' + r + '%</span><span class="vp"><span class="vp-dot y"></span>' + y + '%</span><span class="vp"><span class="vp-dot g"></span>' + g + '%</span><span class="meta">' + (total >= 100 ? '100+' : total) + '</span></div>';
+  return '<article class="block ' + grade + '" onclick="openPost(\'' + p.id + '\')"><div class="block-head"><span class="block-cat">' + escHtml(p.category) + '</span><div class="block-icon"><svg><use href="#ic-' + p.category + '"/></svg></div></div><h2 class="block-title thai">' + escHtml(p.title) + '</h2><p class="block-story thai">' + escHtml(p.story) + '</p><div class="block-footer"><button class="block-cta" onclick="event.stopPropagation();openPost(\'' + p.id + '\')">อ่านเรื่อง<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></button>' + pctsHtml + '</div></article>';
 }
 
-/* ─────────────────────────────────────────────────────────
-   POST DETAIL
-   ───────────────────────────────────────────────────────── */
+// ── POST DETAIL ─────────────────────────────────────────
 async function openPost(postId) {
-  const post = posts.find(p => p.id === postId) || allPosts.find(p => p.id === postId);
+  const post = allPosts.find(p => p.id === postId);
   if (!post) return;
   currentPost = post;
-  currentVote = null;
-
-  if (currentUser) {
-    const { data } = await sb.from('votes').select('vote_color').eq('post_id', postId).eq('voter_id', currentUser.id).maybeSingle();
-    currentVote = data?.vote_color || null;
-  }
-
-  const { data: comments } = await sb
-    .from('comments')
-    .select(`*, profiles(nickname)`)
-    .eq('post_id', postId)
-    .order('created_at', { ascending: true });
-
-  renderDetail(post, comments || []);
+  const myVotes = getMyVotes();
+  const myVote = myVotes[postId] || null;
+  const { data: comments } = await sb.from('comments').select('*, profiles(nickname)').eq('post_id', postId).order('created_at', { ascending: true });
+  renderDetail(post, comments || [], myVote);
   document.getElementById('detailScreen').classList.add('active');
   document.getElementById('detailScreen').scrollTop = 0;
 }
 
-function renderDetail(p, comments) {
+function renderDetail(p, comments, myVote) {
   const grade = getGrade(p);
   const { r, y, g, total } = getPcts(p);
-  const isOwner = currentUser && p.owner_id === currentUser.id;
   const nick = p.profiles?.nickname || 'Anonymous';
-  const voteDisplay = total === 0 ? 'ยังไม่มีโหวต' : (total >= 100 ? '100+ Votes total' : `${total} votes total`);
+  const voteDisplay = total === 0 ? 'ยังไม่มีโหวต' : (total >= 100 ? '100+ Votes total' : total + ' votes total');
   const verdictLabel = { red: 'คนส่วนใหญ่บอกว่า ผิด', yellow: 'แบ่งครึ่ง — พอได้', green: 'คนส่วนใหญ่บอกว่า ถูก', none: 'รอผลโหวต' }[grade];
-
-  const rw = total === 0 ? 33.3 : r;
-  const yw = total === 0 ? 33.4 : y;
-  const gw = total === 0 ? 33.3 : g;
+  const rw = total === 0 ? 33.3 : r, yw = total === 0 ? 33.4 : y, gw = total === 0 ? 33.3 : g;
   const barStyle = total === 0 ? 'opacity:.25' : '';
-
-  let ownerSection = '';
-  if (isOwner) {
-    ownerSection = `
-      <div class="owner-box">
-        <div class="owner-eyebrow">เห็นแค่คุณเท่านั้น · Only you can see this</div>
-        <div class="owner-stats">
-          <div class="owner-stat r"><div class="owner-stat-num">${p.votes_red}</div><div class="owner-stat-label">ผิด</div></div>
-          <div class="owner-stat y"><div class="owner-stat-num">${p.votes_yellow}</div><div class="owner-stat-label">พอได้</div></div>
-          <div class="owner-stat g"><div class="owner-stat-num">${p.votes_green}</div><div class="owner-stat-label">ถูก</div></div>
-          <div class="owner-stat"><div class="owner-stat-num">${total}</div><div class="owner-stat-label">รวม</div></div>
-        </div>
-        <div class="owner-actions">
-          <button class="btn-flat" onclick="editPost()">แก้ไข · Edit</button>
-          <button class="btn-flat danger" onclick="deletePost('${p.id}')">ลบ · Delete</button>
-        </div>
-      </div>`;
-  }
-
-  const commentsHtml = comments.length === 0
-    ? '<div class="comments-empty thai">ยังไม่มีความเห็น — เป็นคนแรก</div>'
-    : comments.map(c => {
-        const cn = c.profiles?.nickname || 'Anonymous';
-        return `
-          <div class="comment-item">
-            <div class="comment-row">
-              <div class="comment-avatar">${escHtml(cn.charAt(0).toUpperCase())}</div>
-              <div class="comment-nick">${escHtml(cn)}</div>
-              <div class="comment-time">${timeAgo(c.created_at)}</div>
-            </div>
-            <div class="comment-text thai">${escHtml(c.comment_text)}</div>
-          </div>`;
-      }).join('');
-
-  const voted = currentVote;
+  const isMyPost = p.owner_id === browserId;
+  const voted = myVote;
   const disabled = voted ? 'disabled' : '';
 
-  document.getElementById('detailBody').innerHTML = `
-    <div class="detail-hero ${grade}">
-      <div class="detail-hero-head">
-        <span class="block-cat">${escHtml(p.category)}</span>
-        <div class="block-icon"><svg><use href="#ic-${p.category}"/></svg></div>
-      </div>
-      <h1 class="detail-title thai">${escHtml(p.title)}</h1>
-      <div class="detail-meta">${escHtml(nick)} · ${escHtml(timeAgo(p.created_at))}</div>
-    </div>
+  let ownerSection = '';
+  if (isMyPost) {
+    ownerSection = '<div class="owner-box"><div class="owner-eyebrow">เห็นแค่คุณเท่านั้น · Only you can see this</div><div class="owner-stats"><div class="owner-stat r"><div class="owner-stat-num">' + p.votes_red + '</div><div class="owner-stat-label">ผิด</div></div><div class="owner-stat y"><div class="owner-stat-num">' + p.votes_yellow + '</div><div class="owner-stat-label">พอได้</div></div><div class="owner-stat g"><div class="owner-stat-num">' + p.votes_green + '</div><div class="owner-stat-label">ถูก</div></div><div class="owner-stat"><div class="owner-stat-num">' + total + '</div><div class="owner-stat-label">รวม</div></div></div><div class="owner-actions"><button class="btn-flat danger" onclick="deletePost(\'' + p.id + '\')">ลบ · Delete</button></div></div>';
+  }
 
-    <div class="detail-section">
-      <div class="section-eyebrow">เรื่องราว · The story</div>
-      <div class="detail-story thai">${escHtml(p.story)}</div>
-    </div>
+  const commentsHtml = comments.length === 0 ? '<div class="comments-empty thai">ยังไม่มีความเห็น — เป็นคนแรก</div>' : comments.map(c => {
+    const cn = c.profiles?.nickname || 'Anonymous';
+    return '<div class="comment-item"><div class="comment-row"><div class="comment-avatar">' + escHtml(cn.charAt(0).toUpperCase()) + '</div><div class="comment-nick">' + escHtml(cn) + '</div><div class="comment-time">' + timeAgo(c.created_at) + '</div></div><div class="comment-text thai">' + escHtml(c.comment_text) + '</div></div>';
+  }).join('');
 
-    <div class="detail-section">
-      <div class="section-eyebrow">คำตัดสิน · The verdict</div>
-      <div class="verdict" style="${barStyle}">
-        <div class="v-r" style="width:${rw}%"></div>
-        <div class="v-y" style="width:${yw}%"></div>
-        <div class="v-g" style="width:${gw}%"></div>
-      </div>
-      <div class="verdict-legend">
-        <div class="vl r"><div class="vl-pct">${r}%</div><div class="vl-label">❌ ผิด</div></div>
-        <div class="vl y"><div class="vl-pct">${y}%</div><div class="vl-label">⚡ พอได้</div></div>
-        <div class="vl g"><div class="vl-pct">${g}%</div><div class="vl-label">✅ ถูก</div></div>
-      </div>
-      <div class="verdict-total">${voteDisplay} — ${escHtml(verdictLabel)}</div>
-      ${ownerSection}
-      ${!isOwner ? `
-      <div class="vote-buttons">
-        <button class="vote-btn r ${voted === 'red' ? 'voted' : ''}" onclick="castVote('red')" ${disabled}>
-          <span class="vote-btn-swatch"></span><span>ผิด</span>
-        </button>
-        <button class="vote-btn y ${voted === 'yellow' ? 'voted' : ''}" onclick="castVote('yellow')" ${disabled}>
-          <span class="vote-btn-swatch"></span><span>พอได้</span>
-        </button>
-        <button class="vote-btn g ${voted === 'green' ? 'voted' : ''}" onclick="castVote('green')" ${disabled}>
-          <span class="vote-btn-swatch"></span><span>ถูก</span>
-        </button>
-      </div>
-      ${voted ? '<div class="vote-done">คุณโหวตแล้ว — ขอบคุณ</div>' : ''}
-      ` : ''}
-    </div>
-
-    <div class="detail-section">
-      <div class="section-eyebrow">ความเห็น · Comments (${comments.length})</div>
-      <div id="commentsList">${commentsHtml}</div>
-      <div class="comment-form">
-        <input type="text" class="comment-input thai" id="commentInput" placeholder="แสดงความเห็น… ไม่เปิดเผยชื่อ" maxlength="300" onkeydown="if(event.key==='Enter')submitComment()">
-        <button class="comment-submit" onclick="submitComment()">ส่ง</button>
-      </div>
-    </div>`;
+  document.getElementById('detailBody').innerHTML = '<div class="detail-hero ' + grade + '"><div class="detail-hero-head"><span class="block-cat">' + escHtml(p.category) + '</span><div class="block-icon"><svg><use href="#ic-' + p.category + '"/></svg></div></div><h1 class="detail-title thai">' + escHtml(p.title) + '</h1><div class="detail-meta">' + escHtml(nick) + ' · ' + escHtml(timeAgo(p.created_at)) + '</div></div><div class="detail-section"><div class="section-eyebrow">เรื่องราว · The story</div><div class="detail-story thai">' + escHtml(p.story) + '</div></div><div class="detail-section"><div class="section-eyebrow">คำตัดสิน · The verdict</div><div class="verdict" style="' + barStyle + '"><div class="v-r" style="width:' + rw + '%"></div><div class="v-y" style="width:' + yw + '%"></div><div class="v-g" style="width:' + gw + '%"></div></div><div class="verdict-legend"><div class="vl r"><div class="vl-pct">' + r + '%</div><div class="vl-label">❌ ผิด</div></div><div class="vl y"><div class="vl-pct">' + y + '%</div><div class="vl-label">⚡ พอได้</div></div><div class="vl g"><div class="vl-pct">' + g + '%</div><div class="vl-label">✅ ถูก</div></div></div><div class="verdict-total">' + voteDisplay + ' — ' + escHtml(verdictLabel) + '</div>' + ownerSection + (!isMyPost ? '<div class="vote-buttons"><button class="vote-btn r ' + (voted === 'red' ? 'voted' : '') + '" onclick="castVote(\'red\')" ' + disabled + '><span class="vote-btn-swatch"></span><span>ผิด</span></button><button class="vote-btn y ' + (voted === 'yellow' ? 'voted' : '') + '" onclick="castVote(\'yellow\')" ' + disabled + '><span class="vote-btn-swatch"></span><span>พอได้</span></button><button class="vote-btn g ' + (voted === 'green' ? 'voted' : '') + '" onclick="castVote(\'green\')" ' + disabled + '><span class="vote-btn-swatch"></span><span>ถูก</span></button></div>' + (voted ? '<div class="vote-done">คุณโหวตแล้ว — ขอบคุณ</div>' : '') : '') + '</div><div class="detail-section"><div class="section-eyebrow">ความเห็น · Comments (' + comments.length + ')</div><div id="commentsList">' + commentsHtml + '</div><div class="comment-form"><input type="text" class="comment-input thai" id="commentInput" placeholder="แสดงความเห็น… นิรนาม" maxlength="300" onkeydown="if(event.key===\'Enter\')submitComment()"><button class="comment-submit" onclick="submitComment()">ส่ง</button></div></div>';
 }
 
 function closeDetail() {
   document.getElementById('detailScreen').classList.remove('active');
-  // Refresh counts in-place without rebuilding the whole feed scroll position.
   if (currentPost) {
     const idx = allPosts.findIndex(p => p.id === currentPost.id);
     if (idx !== -1) allPosts[idx] = currentPost;
   }
 }
 
-/* ─────────────────────────────────────────────────────────
-   VOTING  (atomic increment via RPC, precise errors)
-   ───────────────────────────────────────────────────────── */
+// ── VOTING ──────────────────────────────────────────────
 async function castVote(color) {
-  if (!currentUser) { showAuthModal(); return; }
   if (!currentPost) return;
+  const myVotes = getMyVotes();
+  if (myVotes[currentPost.id]) { showToast('คุณโหวตไปแล้ว'); return; }
 
-  const colorMap = { red: 'votes_red', yellow: 'votes_yellow', green: 'votes_green' };
-  const col = colorMap[color];
+  requireNickname(async () => {
+    const colorMap = { red: 'votes_red', yellow: 'votes_yellow', green: 'votes_green' };
+    const col = colorMap[color];
 
-  const { error: voteError } = await sb.from('votes').insert({
-    post_id: currentPost.id,
-    voter_id: currentUser.id,
-    vote_color: color
-  });
+    const { error: voteError } = await sb.from('votes').insert({
+      post_id: currentPost.id,
+      voter_id: browserId,
+      vote_color: color
+    });
 
-  if (voteError) {
-    if (voteError.code === '23505') {
-      showToast('คุณโหวตไปแล้ว');
-    } else {
-      showToast('โหวตไม่ได้ ลองใหม่ · Vote failed');
-      console.error('Vote insert error:', voteError);
+    if (voteError && voteError.code !== '23505') {
+      showToast('โหวตไม่ได้ ลองใหม่'); return;
     }
-    return;
-  }
 
-  // Atomic server-side increment (no read-then-write race). Fallback if the
-  // increment_vote RPC has not been installed in Supabase yet.
-  const { data: rpcData, error: rpcError } = await sb.rpc('increment_vote', {
-    p_post_id: currentPost.id,
-    p_column: col
+    setMyVote(currentPost.id, color);
+
+    const { data: rpcData, error: rpcError } = await sb.rpc('increment_vote', { p_post_id: currentPost.id, p_column: col });
+    if (rpcError) {
+      await sb.from('posts').update({ [col]: currentPost[col] + 1 }).eq('id', currentPost.id);
+      currentPost[col]++;
+    } else if (rpcData && typeof rpcData[col] === 'number') {
+      currentPost.votes_red = rpcData.votes_red;
+      currentPost.votes_yellow = rpcData.votes_yellow;
+      currentPost.votes_green = rpcData.votes_green;
+    } else { currentPost[col]++; }
+
+    const { data: comments } = await sb.from('comments').select('*, profiles(nickname)').eq('post_id', currentPost.id).order('created_at', { ascending: true });
+    renderDetail(currentPost, comments || [], color);
+    showToast('โหวตแล้ว · Thanks 🙏');
   });
-
-  if (rpcError) {
-    console.warn('increment_vote RPC unavailable, using fallback:', rpcError);
-    await sb.from('posts').update({ [col]: currentPost[col] + 1 }).eq('id', currentPost.id);
-    currentPost[col]++;
-  } else if (rpcData && typeof rpcData[col] === 'number') {
-    currentPost.votes_red = rpcData.votes_red;
-    currentPost.votes_yellow = rpcData.votes_yellow;
-    currentPost.votes_green = rpcData.votes_green;
-  } else {
-    currentPost[col]++;
-  }
-
-  currentVote = color;
-
-  const { data: comments } = await sb.from('comments').select(`*, profiles(nickname)`).eq('post_id', currentPost.id).order('created_at', { ascending: true });
-  renderDetail(currentPost, comments || []);
-  showToast('โหวตแล้ว · Thanks');
 }
 
-/* ─────────────────────────────────────────────────────────
-   COMMENTS
-   ───────────────────────────────────────────────────────── */
+// ── COMMENTS ────────────────────────────────────────────
 async function submitComment() {
-  if (!currentUser) { showAuthModal(); return; }
   const input = document.getElementById('commentInput');
   const text = input.value.trim();
   if (!text) return;
 
-  const { error } = await sb.from('comments').insert({
-    post_id: currentPost.id,
-    commenter_id: currentUser.id,
-    comment_text: text
+  requireNickname(async () => {
+    const nick = getNickname();
+    let profileId = await getOrCreateProfile(nick);
+    const { error } = await sb.from('comments').insert({ post_id: currentPost.id, commenter_id: profileId, comment_text: text });
+    if (error) { showToast('เกิดข้อผิดพลาด ลองใหม่'); return; }
+    input.value = '';
+    const { data: comments } = await sb.from('comments').select('*, profiles(nickname)').eq('post_id', currentPost.id).order('created_at', { ascending: true });
+    renderDetail(currentPost, comments || [], getMyVotes()[currentPost.id] || null);
+    showToast('ส่งแล้ว · Sent');
   });
-
-  if (error) { showToast('เกิดข้อผิดพลาด ลองใหม่'); return; }
-
-  input.value = '';
-  const { data: comments } = await sb.from('comments').select(`*, profiles(nickname)`).eq('post_id', currentPost.id).order('created_at', { ascending: true });
-  renderDetail(currentPost, comments || []);
-  showToast('ส่งแล้ว · Sent');
 }
 
-/* ─────────────────────────────────────────────────────────
-   POST SUBMISSION
-   ───────────────────────────────────────────────────────── */
+// ── POST SUBMISSION ─────────────────────────────────────
 function handlePostClick() {
-  if (!currentUser) { showAuthModal(); return; }
-  document.getElementById('postModal').classList.add('active');
+  requireNickname(() => {
+    document.getElementById('postModal').classList.add('active');
+  });
 }
 
 function closePostModal() {
@@ -1618,256 +862,68 @@ async function submitPost() {
   const title = document.getElementById('postTitle').value.trim();
   const story = document.getElementById('postStory').value.trim();
   const category = document.getElementById('postCategory').value;
-
   if (!title || !story) { showToast('กรุณากรอกหัวข้อและเรื่องราว'); return; }
 
+  const nick = getNickname();
   const btn = document.getElementById('submitPostBtn');
-  btn.disabled = true;
-  btn.textContent = 'กำลังโพสต์…';
+  btn.disabled = true; btn.textContent = 'กำลังโพสต์…';
 
-  const { error } = await sb.from('posts').insert({
-    owner_id: currentUser.id,
-    title, story, category,
-    votes_red: 0, votes_yellow: 0, votes_green: 0
-  });
+  let profileId = await getOrCreateProfile(nick);
 
-  btn.disabled = false;
-  btn.textContent = 'โพสต์แบบนิรนาม · Post anonymously';
-
-  if (error) { showToast('เกิดข้อผิดพลาด ลองใหม่'); return; }
+  const { error } = await sb.from('posts').insert({ owner_id: profileId, title, story, category, votes_red: 0, votes_yellow: 0, votes_green: 0 });
+  btn.disabled = false; btn.textContent = 'โพสต์แบบนิรนาม · Post anonymously';
+  if (error) { showToast('เกิดข้อผิดพลาด ลองใหม่: ' + error.message); return; }
 
   closePostModal();
-  showToast('โพสต์แล้ว · Posted');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  showToast('โพสต์แล้ว · Posted 🎉');
   await loadFeed();
 }
 
-/* ─────────────────────────────────────────────────────────
-   DELETE POST
-   ───────────────────────────────────────────────────────── */
+// ── PROFILE HELPER ──────────────────────────────────────
+// Creates or retrieves a profile row using browserId as the key
+async function getOrCreateProfile(nick) {
+  // Try to find existing profile by browser_id stored in nickname field pattern
+  // We use a fixed UUID-like key per browser stored in localStorage
+  let profileId = localStorage.getItem('bd_profile_id');
+  if (profileId) return profileId;
+
+  // Create a new profile
+  const { data, error } = await sb.from('profiles').insert({ email: browserId + '@anon.local', nickname: nick, avatar_url: null }).select('id').single();
+  if (error) {
+    // Profile may already exist (race), try fetching
+    const { data: existing } = await sb.from('profiles').select('id').eq('email', browserId + '@anon.local').single();
+    if (existing) { localStorage.setItem('bd_profile_id', existing.id); return existing.id; }
+    return null;
+  }
+  localStorage.setItem('bd_profile_id', data.id);
+  return data.id;
+}
+
+// ── DELETE POST ─────────────────────────────────────────
 async function deletePost(postId) {
-  if (!confirm('ลบโพสต์นี้ใช่ไหม? · Delete this post?')) return;
+  if (!confirm('ลบโพสต์นี้? · Delete this post?')) return;
   const { error } = await sb.from('posts').delete().eq('id', postId);
-  if (error) { showToast('ลบไม่ได้ ลองใหม่'); return; }
+  if (error) { showToast('ลบไม่ได้ · Delete failed'); return; }
   closeDetail();
-  showToast('ลบแล้ว');
+  showToast('ลบแล้ว · Deleted');
   await loadFeed();
 }
 
-/* ─────────────────────────────────────────────────────────
-   PROFILE
-   ───────────────────────────────────────────────────────── */
-function handleProfileClick() {
-  if (!currentUser) { showAuthModal(); return; }
-  renderProfile();
-  document.getElementById('profileScreen').classList.add('active');
-  document.getElementById('profileScreen').scrollTop = 0;
-}
-
-async function renderProfile() {
-  const { data: myPosts } = await sb.from('posts').select('*').eq('owner_id', currentUser.id).order('created_at', { ascending: false });
-  const nick = currentProfile?.nickname || '?';
-  const initial = nick.charAt(0).toUpperCase();
-
-  const postsHtml = (myPosts || []).length === 0
-    ? '<div style="color:var(--ink-soft);font-size:14px;padding:14px 0" class="thai">ยังไม่มีโพสต์ — เริ่มเขียนเรื่องแรก</div>'
-    : (myPosts || []).map(p => {
-        const grade = getGrade(p);
-        const total = p.votes_red + p.votes_yellow + p.votes_green;
-        const voteN = total >= 100 ? '100+' : total;
-        return `
-          <div class="profile-post" onclick="openPost('${p.id}');closeProfile()">
-            <div class="pp-dot ${grade}"></div>
-            <div class="pp-main">
-              <div class="pp-title thai">${escHtml(p.title)}</div>
-              <div class="pp-meta">${escHtml(p.category)} · ${escHtml(timeAgo(p.created_at))} · ${voteN} votes</div>
-            </div>
-            <div class="pp-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></div>
-          </div>`;
-      }).join('');
-
-  document.getElementById('profileBody').innerHTML = `
-    <div class="profile-hero">
-      <button class="profile-hero-edit" onclick="openEditProfile()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-        แก้ไข · Edit
-      </button>
-      <div class="profile-avatar-big">${currentProfile?.avatar_url ? `<img src="${escHtml(currentProfile.avatar_url)}" alt="">` : escHtml(initial)}</div>
-      <div class="profile-name">${escHtml(nick)}</div>
-      <div class="profile-email">${escHtml(currentUser.email)}</div>
-    </div>
-    <div class="profile-section">
-      <div class="section-eyebrow">โพสต์ของคุณ · Your posts</div>
-      ${postsHtml}
-      <button class="btn-flat" style="margin-top:24px;width:100%" onclick="signOut()">ออกจากระบบ · Sign out</button>
-    </div>`;
-}
-
-function closeProfile() {
-  document.getElementById('profileScreen').classList.remove('active');
-}
-
-/* ─────────────────────────────────────────────────────────
-   AUTH MODAL
-   ───────────────────────────────────────────────────────── */
-function showAuthModal() { document.getElementById('authModal').classList.add('active'); }
-function closeAuthModal() {
-  document.getElementById('authModal').classList.remove('active');
-  document.getElementById('authSignInView').style.display = 'block';
-  document.getElementById('signedOutView').style.display = 'none';
-}
-
-async function signInWithGoogle() {
-  const { error } = await sb.auth.signInWithOAuth({
-    provider: 'google',
-    options: {
-      redirectTo: window.location.origin + window.location.pathname
-    }
-  });
-  if (error) { showToast('เกิดข้อผิดพลาด: ' + error.message); }
-}
-
-async function signOut() {
-  closeProfile();
-  document.getElementById('authSignInView').style.display = 'none';
-  document.getElementById('signedOutView').style.display = 'block';
-  showAuthModal();
-  currentUser = null;
-  currentProfile = null;
-  updateAvatar();
-  try { await sb.auth.signOut(); } catch (e) {}
-}
-
-/* ─────────────────────────────────────────────────────────
-   NICKNAME
-   ───────────────────────────────────────────────────────── */
-function showNicknameModal() { document.getElementById('nicknameModal').classList.add('active'); }
-
-async function saveNickname() {
-  const nick = document.getElementById('nicknameInput').value.trim();
-  if (!nick || nick.length < 2) { showToast('กรุณากรอกชื่อ 2 ตัวขึ้นไป'); return; }
-
-  const { error } = await sb.from('profiles').update({ nickname: nick }).eq('id', currentUser.id);
-  if (error) { showToast('เกิดข้อผิดพลาด'); return; }
-
-  currentProfile = { ...currentProfile, nickname: nick };
-  document.getElementById('nicknameModal').classList.remove('active');
-  updateAvatar();
-  showToast(`ยินดีต้อนรับ ${nick}`);
-}
-
-/* ─────────────────────────────────────────────────────────
-   EDIT PROFILE  (nickname + profile picture)
-   ───────────────────────────────────────────────────────── */
-let _pendingAvatar = null;
-let _pendingAvatarTouched = false;
-
-function openEditProfile() {
-  _pendingAvatar = currentProfile?.avatar_url || null;
-  _pendingAvatarTouched = false;
-  document.getElementById('editNicknameInput').value = currentProfile?.nickname || '';
-  refreshEditAvatarPreview();
-  document.getElementById('editProfileModal').classList.add('active');
-}
-
-function closeEditProfile() {
-  document.getElementById('editProfileModal').classList.remove('active');
-  document.getElementById('editAvatarFile').value = '';
-}
-
-function refreshEditAvatarPreview() {
-  const el = document.getElementById('editAvatarPreview');
-  const initial = (document.getElementById('editNicknameInput').value || currentProfile?.nickname || '?').charAt(0).toUpperCase();
-  if (_pendingAvatar) {
-    el.innerHTML = `<img src="${_pendingAvatar}" alt="">`;
-    document.getElementById('editAvatarRemove').style.display = 'inline-flex';
-  } else {
-    el.textContent = initial;
-    document.getElementById('editAvatarRemove').style.display = 'none';
-  }
-}
-
-function handleAvatarFile(e) {
-  const file = e.target.files && e.target.files[0];
-  if (!file) return;
-  if (!file.type.startsWith('image/')) { showToast('ไฟล์ต้องเป็นรูปภาพ'); return; }
-  if (file.size > 8 * 1024 * 1024) { showToast('รูปใหญ่เกินไป (<8MB)'); return; }
-  const reader = new FileReader();
-  reader.onload = () => {
-    const img = new Image();
-    img.onload = () => {
-      const MAX = 480;
-      const scale = Math.min(1, MAX / Math.max(img.width, img.height));
-      const w = Math.round(img.width * scale), h = Math.round(img.height * scale);
-      const c = document.createElement('canvas');
-      c.width = w; c.height = h;
-      c.getContext('2d').drawImage(img, 0, 0, w, h);
-      _pendingAvatar = c.toDataURL('image/jpeg', 0.85);
-      _pendingAvatarTouched = true;
-      refreshEditAvatarPreview();
-    };
-    img.src = reader.result;
-  };
-  reader.readAsDataURL(file);
-}
-
-function removeAvatar() {
-  _pendingAvatar = null;
-  _pendingAvatarTouched = true;
-  document.getElementById('editAvatarFile').value = '';
-  refreshEditAvatarPreview();
-}
-
-async function saveEditProfile() {
-  const newNick = document.getElementById('editNicknameInput').value.trim();
-  if (!newNick || newNick.length < 2) { showToast('ชื่อต้องมี 2 ตัวขึ้นไป'); return; }
-
-  const updates = { nickname: newNick };
-  if (_pendingAvatarTouched) {
-    updates.avatar_url = _pendingAvatar; // data URL or null
-  }
-
-  const btn = document.getElementById('saveEditProfileBtn');
-  btn.disabled = true;
-  btn.textContent = 'กำลังบันทึก…';
-  const { error } = await sb.from('profiles').update(updates).eq('id', currentUser.id);
-  btn.disabled = false;
-  btn.textContent = 'บันทึก · Save changes';
-
-  if (error) { showToast('บันทึกไม่ได้: ' + (error.message || '')); return; }
-
-  currentProfile = { ...currentProfile, ...updates };
-  updateAvatar();
-  closeEditProfile();
-  renderProfile();
-  showToast('บันทึกแล้ว · Saved');
-}
-
-document.addEventListener('input', e => {
-  if (e.target && e.target.id === 'editNicknameInput' && !_pendingAvatar) refreshEditAvatarPreview();
-});
-
-/* ─────────────────────────────────────────────────────────
-   HELPERS
-   ───────────────────────────────────────────────────────── */
+// ── HELPERS ─────────────────────────────────────────────
 function updateCharCount(inputId, countId) {
-  const len = document.getElementById(inputId).value.length;
-  document.getElementById(countId).textContent = len;
+  document.getElementById(countId).textContent = document.getElementById(inputId).value.length;
 }
 
 function showToast(msg) {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
+  t.textContent = msg; t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2500);
 }
 
 function escHtml(str) {
   if (str === null || str === undefined) return '';
-  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
 }
-
-function editPost() { showToast('เร็วๆ นี้ · Coming soon'); }
 
 init();
 </script>
