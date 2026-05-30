@@ -612,12 +612,6 @@ async function init() {
       document.getElementById('postCategory').value = p.dataset.cat;
     });
   });
-  // Auto-refresh feed every 30 seconds
-  setInterval(async () => {
-    if (!document.getElementById('detailScreen').classList.contains('active')) {
-      await loadFeed();
-    }
-  }, 30000);
 }
 
 // ── FEED ────────────────────────────────────────────────
