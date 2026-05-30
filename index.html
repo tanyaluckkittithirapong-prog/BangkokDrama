@@ -640,7 +640,7 @@ async function loadFeed() {
   const feed = document.getElementById('feed');
   feed.innerHTML = '<div class="loading"><div class="spinner"></div>กำลังโหลด...</div>';
   removeFeedTail();
-  const { data, error } = await sb.from('posts').select('*, profiles(nickname), comments(count)').order('created_at', { ascending: false });
+  const { data, error } = await sb.from('posts').select('*, comments(count)').order('created_at', { ascending: false });
   if (error) { feed.innerHTML = '<div class="empty"><div class="empty-mark"><span class="r"></span><span class="y"></span><span class="g"></span></div><div class="empty-text">โหลดไม่ได้</div><div class="empty-sub">' + escHtml(error.message) + '</div></div>'; return; }
   allPosts = data || [];
   feedQueue = buildFeedQueue();
@@ -738,7 +738,7 @@ function renderCard(p) {
   const grade = getGrade(p);
   const { r, y, g, total } = getPcts(p);
   const pctsHtml = total === 0 ? '<div class="block-pcts" style="opacity:.7">ยังไม่มีโหวต — เป็นคนแรก</div>' : '<div class="block-pcts"><span class="vp"><span class="vp-dot r"></span>' + r + '%</span><span class="vp"><span class="vp-dot y"></span>' + y + '%</span><span class="vp"><span class="vp-dot g"></span>' + g + '%</span><span class="meta">' + (total >= 100 ? '100+' : total) + '</span></div>';
-  const nick = p.profiles?.nickname || 'Anonymous';
+  const nick = p.nickname || 'Anonymous';
   return '<article class="block ' + grade + '" onclick="openPost(\'' + p.id + '\')"><div class="block-head"><span class="block-cat">' + escHtml(p.category) + '</span><div class="block-icon"><svg><use href="#ic-' + p.category + '"/></svg></div></div><h2 class="block-title thai">' + escHtml(p.title) + '</h2><p class="block-story thai">' + escHtml(p.story) + '</p><div class="block-footer"><button class="block-cta" onclick="event.stopPropagation();openPost(\'' + p.id + '\')">อ่านเรื่อง<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></button>' + pctsHtml + '</div><div style="margin-top:10px;font-size:11px;opacity:0.65;font-weight:500;letter-spacing:0.04em;text-transform:uppercase;">' + escHtml(nick) + ' · ' + timeAgo(p.created_at) + '</div></article>';
 }
 
@@ -749,7 +749,7 @@ async function openPost(postId) {
   currentPost = post;
   const myVotes = getMyVotes();
   const myVote = myVotes[postId] || null;
-  const { data: comments } = await sb.from('comments').select('*, profiles(nickname)').eq('post_id', postId).order('created_at', { ascending: true });
+  const { data: comments } = await sb.from('comments').select('*').eq('post_id', postId).order('created_at', { ascending: true });
   renderDetail(post, comments || [], myVote);
   document.getElementById('detailScreen').classList.add('active');
   document.getElementById('detailScreen').scrollTop = 0;
@@ -758,12 +758,12 @@ async function openPost(postId) {
 function renderDetail(p, comments, myVote) {
   const grade = getGrade(p);
   const { r, y, g, total } = getPcts(p);
-  const nick = p.profiles?.nickname || 'Anonymous';
+  const nick = p.nickname || 'Anonymous';
   const voteDisplay = total === 0 ? 'ยังไม่มีโหวต' : (total >= 100 ? '100+ Votes total' : total + ' votes total');
   const verdictLabel = { red: 'คนส่วนใหญ่บอกว่า ผิด', yellow: 'แบ่งครึ่ง — พอได้', green: 'คนส่วนใหญ่บอกว่า ถูก', none: 'รอผลโหวต' }[grade];
   const rw = total === 0 ? 33.3 : r, yw = total === 0 ? 33.4 : y, gw = total === 0 ? 33.3 : g;
   const barStyle = total === 0 ? 'opacity:.25' : '';
-  const isMyPost = p.owner_id === localStorage.getItem('bd_profile_id');
+  const isMyPost = p.owner_id === browserId;
   const voted = myVote;
   const disabled = voted ? 'disabled' : '';
 
@@ -773,7 +773,7 @@ function renderDetail(p, comments, myVote) {
   }
 
   const commentsHtml = comments.length === 0 ? '<div class="comments-empty thai">ยังไม่มีความเห็น — เป็นคนแรก</div>' : comments.map(c => {
-    const cn = c.profiles?.nickname || 'Anonymous';
+    const cn = c.nickname || 'Anonymous';
     return '<div class="comment-item"><div class="comment-row"><div class="comment-avatar">' + escHtml(cn.charAt(0).toUpperCase()) + '</div><div class="comment-nick">' + escHtml(cn) + '</div><div class="comment-time">' + timeAgo(c.created_at) + '</div></div><div class="comment-text thai">' + escHtml(c.comment_text) + '</div></div>';
   }).join('');
 
@@ -820,7 +820,7 @@ async function castVote(color) {
       currentPost.votes_green = rpcData.votes_green;
     } else { currentPost[col]++; }
 
-    const { data: comments } = await sb.from('comments').select('*, profiles(nickname)').eq('post_id', currentPost.id).order('created_at', { ascending: true });
+    const { data: comments } = await sb.from('comments').select('*').eq('post_id', currentPost.id).order('created_at', { ascending: true });
     renderDetail(currentPost, comments || [], color);
     showToast('โหวตแล้ว · Thanks 🙏');
   });
@@ -834,11 +834,10 @@ async function submitComment() {
 
   requireNickname(async () => {
     const nick = getNickname();
-    let profileId = await getOrCreateProfile(nick);
-    const { error } = await sb.from('comments').insert({ post_id: currentPost.id, commenter_id: profileId, comment_text: text });
+    const { error } = await sb.from('comments').insert({ post_id: currentPost.id, commenter_id: browserId, nickname: nick, comment_text: text });
     if (error) { showToast('เกิดข้อผิดพลาด ลองใหม่'); return; }
     input.value = '';
-    const { data: comments } = await sb.from('comments').select('*, profiles(nickname)').eq('post_id', currentPost.id).order('created_at', { ascending: true });
+    const { data: comments } = await sb.from('comments').select('*').eq('post_id', currentPost.id).order('created_at', { ascending: true });
     renderDetail(currentPost, comments || [], getMyVotes()[currentPost.id] || null);
     showToast('ส่งแล้ว · Sent');
   });
@@ -869,9 +868,7 @@ async function submitPost() {
   const btn = document.getElementById('submitPostBtn');
   btn.disabled = true; btn.textContent = 'กำลังโพสต์…';
 
-  let profileId = await getOrCreateProfile(nick);
-
-  const { error } = await sb.from('posts').insert({ owner_id: profileId, title, story, category, votes_red: 0, votes_yellow: 0, votes_green: 0 });
+  const { error } = await sb.from('posts').insert({ owner_id: browserId, nickname: nick, title, story, category, votes_red: 0, votes_yellow: 0, votes_green: 0 });
   btn.disabled = false; btn.textContent = 'โพสต์แบบนิรนาม · Post anonymously';
   if (error) { showToast('เกิดข้อผิดพลาด ลองใหม่: ' + error.message); return; }
 
